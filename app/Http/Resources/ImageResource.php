@@ -27,7 +27,7 @@ class ImageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->image,
+            'image' => url('storage/'.$this->image),
         ];
     }
 }
