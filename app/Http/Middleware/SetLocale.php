@@ -17,7 +17,10 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $languageCode = 'en'; //$request->header('Accept-Language', 'en');
+        $languageCode = $request->header('Accept-Language', 'en');
+        if($languageCode== 'en-GB,en-US;q=0.9,en;q=0.8'){
+            $languageCode = 'en';
+        }
         if (!in_array($languageCode, Language::all()->pluck('abbr')->toArray())) {
             return response()->json(['message' => $languageCode . ' Language not supported', 'errors' => ['Accept-Language' => $languageCode . ' Language not supported']], 422);
         }
