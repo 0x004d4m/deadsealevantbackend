@@ -1,0 +1,242 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel OpenApi Dead Sea Levant Documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/home": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Returns Home data",
+                "description": "Returns Home data",
+                "operationId": "Home",
+                "responses": {
+                    "200": {
+                        "description": "Returns Home data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/HomeResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong input response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "dynamic-error-keys": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/languages": {
+            "get": {
+                "tags": [
+                    "Language"
+                ],
+                "summary": "List Languages",
+                "description": "List Languages",
+                "operationId": "ListLanguages",
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of Languages",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/LanguageResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CategoryResource": {
+                "title": "Category Resource",
+                "description": "Resource of the Category object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "HomeResource": {
+                "title": "Home Resource",
+                "description": "Resource of the Home object",
+                "properties": {
+                    "translations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LangFileResource"
+                        }
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ImageResource"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CategoryResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ImageResource": {
+                "title": "Image Resource",
+                "description": "Resource of the Image object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LangFileResource": {
+                "title": "Lang File Resource",
+                "description": "Resource of the Lang File object",
+                "properties": {
+                    "lang_file_name": {
+                        "type": "object",
+                        "additionalProperties": [
+                            {
+                                "type": "string",
+                                "example": "value",
+                                "property": "key"
+                            },
+                            {
+                                "type": "string",
+                                "example": "value2",
+                                "property": "key2"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "LanguageResource": {
+                "title": "Language Resource",
+                "description": "Resource of the Language object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "native": {
+                        "type": "string"
+                    },
+                    "abbr": {
+                        "type": "string"
+                    },
+                    "default": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Home",
+            "description": "API Endpoints of Home"
+        },
+        {
+            "name": "Language",
+            "description": "API Endpoints of Language"
+        }
+    ]
+}

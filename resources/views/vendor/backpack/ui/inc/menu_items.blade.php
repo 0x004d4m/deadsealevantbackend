@@ -14,10 +14,7 @@
 </x-backpack::menu-dropdown>
 
 <x-backpack::menu-item title='Logs' icon='la la-terminal' :link="backpack_url('log')" />
-<x-backpack::menu-item title="Sections" icon="la la-question" :link="backpack_url('section')" />
-<x-backpack::menu-item title="Benefts" icon="la la-question" :link="backpack_url('beneft')" />
-<x-backpack::menu-item title="Steps" icon="la la-question" :link="backpack_url('step')" />
-<x-backpack::menu-item title="Disadvantages" icon="la la-question" :link="backpack_url('disadvantage')" />
+<x-backpack::menu-item title="images" icon="la la-question" :link="backpack_url('images')" />
 <x-backpack::menu-item title="Categories" icon="la la-question" :link="backpack_url('category')" />
 <x-backpack::menu-item title="Products" icon="la la-question" :link="backpack_url('product')" />
 <x-backpack::menu-item title="Product images" icon="la la-question" :link="backpack_url('product-image')" />
