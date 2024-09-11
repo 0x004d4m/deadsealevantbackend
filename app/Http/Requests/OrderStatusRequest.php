@@ -4,32 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
-/**
- * @OA\Schema(
- *     schema="ContactRequestRequest",
- *     title="Contact Request Request",
- *     description="Request body for Contact Request Request",
- *     required={"name", "email", "subject", "message"},
- *     @OA\Property(
- *         property="name",
- *         type="string"
- *     ),
- *     @OA\Property(
- *         property="email",
- *         type="string"
- *     ),
- *     @OA\Property(
- *         property="subject",
- *         type="string"
- *     ),
- *     @OA\Property(
- *         property="message",
- *         type="string"
- *     ),
- * )
- */
-class ContactRequestRequest extends FormRequest
+class OrderStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -39,7 +14,7 @@ class ContactRequestRequest extends FormRequest
     public function authorize()
     {
         // only allow updates if the user is logged in
-        return true;
+        return backpack_auth()->check();
     }
 
     /**
@@ -51,9 +26,7 @@ class ContactRequestRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required',
-            'subject' => 'required',
-            'message' => 'required',
+            'color' => 'required',
         ];
     }
 

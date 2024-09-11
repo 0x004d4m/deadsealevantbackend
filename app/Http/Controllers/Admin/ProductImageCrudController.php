@@ -41,6 +41,22 @@ class ProductImageCrudController extends CrudController
     {
         CRUD::setFromDb(); // set columns from db columns.
 
+        $this->crud->addColumn('product_id', [
+            'label' => "Product",
+            'type' => "select",
+            'name' => 'product_id',
+            'entity' => 'product',
+            'attribute' => "title",
+            'model' => 'App\Models\Product'
+        ]);
+        $this->crud->setColumnDetails('product_id', [
+            'label' => "Product",
+            'type' => "select",
+            'name' => 'product_id',
+            'entity' => 'product',
+            'attribute' => "title",
+            'model' => 'App\Models\Product'
+        ]);
         $this->crud->setColumnDetails('image', [
             'name'   => 'image',
             'type'   => 'upload',
@@ -59,7 +75,14 @@ class ProductImageCrudController extends CrudController
     {
         CRUD::setValidation(ProductImageRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
-
+        $this->crud->addField([
+            'label' => "Product",
+            'type' => "select",
+            'name' => 'product_id',
+            'entity' => 'product',
+            'attribute' => "title",
+            'model' => 'App\Models\Product'
+        ]);
         $this->crud->field([
             'name'   => 'image',
             'type'   => 'upload',

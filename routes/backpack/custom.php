@@ -23,6 +23,8 @@ Route::group([
     Route::crud('product-image', 'ProductImageCrudController');
     Route::crud('contact-request', 'ContactRequestCrudController');
     Route::crud('email', 'EmailCrudController');
+    Route::crud('country', 'CountryCrudController');
+    Route::crud('order-status', 'OrderStatusCrudController');
 }); // this should be the absolute last line of this file
 
 /**

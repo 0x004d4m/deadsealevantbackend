@@ -16,6 +16,8 @@
 <x-backpack::menu-item title='Logs' icon='la la-terminal' :link="backpack_url('log')" />
 <x-backpack::menu-item title="images" icon="la la-question" :link="backpack_url('images')" />
 <x-backpack::menu-item title="Categories" icon="la la-question" :link="backpack_url('category')" />
+<x-backpack::menu-item title="Countries" icon="la la-question" :link="backpack_url('country')" />
+<x-backpack::menu-item title="Order statuses" icon="la la-question" :link="backpack_url('order-status')" />
 <x-backpack::menu-item title="Products" icon="la la-question" :link="backpack_url('product')" />
 <x-backpack::menu-item title="Product images" icon="la la-question" :link="backpack_url('product-image')" />
 <x-backpack::menu-item title="Contact requests" icon="la la-question" :link="backpack_url('contact-request')" />
