@@ -144,6 +144,24 @@ class HomeController extends Controller
      *  operationId="ListProducts",
      *  tags={"Home"},
      *  @OA\Parameter(
+     *     name="page",
+     *     description="page",
+     *     required=false,
+     *     in="query",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Parameter(
+     *     name="search",
+     *     description="search",
+     *     required=false,
+     *     in="query",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Parameter(
      *     name="category_id",
      *     description="category id",
      *     required=false,

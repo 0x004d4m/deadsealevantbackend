@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Log;
 
 class ProductFilters extends QueryFilter
 {
+    public function search($value)
+    {
+        return $this->builder->where('name', 'LIKE', "%" . $value . "%")->orWhere('description', 'LIKE', "%" . $value . "%");
+    }
     public function category_id($value)
     {
         return $this->builder->where('category_id', $value);
@@ -15,7 +19,7 @@ class ProductFilters extends QueryFilter
         Log::debug($value);
         if ($value == 'true') {
             return $this->builder->where('stock', '>', 0);
-        }else{
+        } else {
             return $this->builder->where('stock', 0);
         }
     }
