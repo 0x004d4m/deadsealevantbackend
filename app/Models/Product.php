@@ -25,12 +25,10 @@ class Product extends Model
         'image',
         'price',
         'stock',
-        'shipping_terms',
     ];
     protected $translatable = [
         'title',
         'description',
-        'shipping_terms',
     ];
 
     public function scopeFilter($query, ProductFilters $filters)

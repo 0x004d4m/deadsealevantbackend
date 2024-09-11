@@ -76,7 +76,7 @@ class ProductResource extends JsonResource
             'image' => url('storage/' . $this->image),
             'price' => $this->price,
             'stock' => $this->stock,
-            'shipping_terms' => $this->shipping_terms,
+            'shipping_terms' => __('terms_and_conditions.shipping'),
             'product_reviews' => ProductReviewsResource::collection($this->productReviews),
             'product_images' => ProductImagesResource::collection($this->productImages),
         ];
