@@ -18,4 +18,6 @@ return [
     'no_reviews' => 'No reviews for this product',
     'in_stock' => 'in stock',
     'out_of_stock' => 'out of stock',
+    'from' => 'From',
+    'to' => 'To',
 ];
