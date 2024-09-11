@@ -73,7 +73,7 @@ class ProductResource extends JsonResource
             'category' => new CategoryResource($this->category),
             'title' => $this->title,
             'description' => $this->description,
-            'image' => url('storage/' . $this->image),
+            'image' => strpos($this->image, 'http') === 0? $this->image : url('storage/' . $this->image),
             'price' => $this->price,
             'stock' => $this->stock,
             'shipping_terms' => __('terms_and_conditions.shipping'),

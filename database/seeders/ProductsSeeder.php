@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsSeeder extends Seeder
 {
@@ -13,17 +14,40 @@ class ProductsSeeder extends Seeder
      */
     public function run(): void
     {
-        // category_id
-        // title
-        // description
-        // image
-        // price
-        // stock
-        DB::table('categories')->insert([
-            ["id" => 1, "name" => '{"en":"Body Care","ar":"العناية بالجسم"}'],
-            ["id" => 2, "name" => '{"en":"Facial Care","ar":"العناية بالوجه"}'],
-            ["id" => 3, "name" => '{"en":"Hair Care","ar":"العناية بالشعر"}'],
-            ["id" => 4, "name" => '{"en":"Mixed Uses","ar":"متعدد الاستخدامات"}'],
-        ]);
+        $filePath = public_path('products.xlsx');
+        $data = Excel::toArray(null, $filePath)[0];
+        array_shift($data);
+        foreach ($data as $row) {
+            $productId = DB::table('products')->insertGetId([
+                'category_id' => $row[4],
+                'title' => '{"en":"'. addslashes($row[1]).'"}',
+                'description' => '{"en":"' . addslashes($row[2]) . '"}',
+                'image' => $this->sanitizeExcelFormula($row[6]),
+                'price' => $row[3],
+                'stock' => 100,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if (!empty($row[7])) {
+                $images = explode(',', $this->sanitizeExcelFormula($row[7]));
+                foreach ($images as $image) {
+                    DB::table('product_images')->insert([
+                        'product_id' => $productId,
+                        'image' => trim($image),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
+    }
+    private function sanitizeExcelFormula($value)
+    {
+        // Handle formula-like strings, just return the value after =IFERROR or similar
+        if (strpos($value, '=') === 0) {
+            return preg_replace('/^=.*?\"(.+?)\"/', '$1', $value); // Extract string inside the formula
+        }
+        return $value;
     }
 }

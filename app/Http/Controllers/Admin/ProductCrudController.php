@@ -58,9 +58,15 @@ class ProductCrudController extends CrudController
         ]);
         $this->crud->setColumnDetails('image', [
             'name'   => 'image',
-            'type'   => 'upload',
+            'type'   => 'url',
             'label'  => 'Image',
-            'disk'   => 'public',
+            'function' => function ($entry) {
+                if (strpos($entry->image, 'http') === 0) {
+                    return $entry->image;
+                } else {
+                    return url('storage/' . $entry->image);
+                }
+            },
         ]);
     }
 

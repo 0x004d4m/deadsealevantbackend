@@ -35,7 +35,7 @@ class ProductImagesResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'image' => url('storage/'.$this->image),
+            'image' => strpos($this->image, 'http') === 0? $this->image : url('storage/' . $this->image),
             'product_id' => $this->product_id,
         ];
     }
