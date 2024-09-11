@@ -16,4 +16,6 @@ return [
     'reviews' => 'Reviews',
     'shipping_terms_and_conditions' => 'Shipping terms & conditions',
     'no_reviews' => 'No reviews for this product',
+    'in_stock' => 'in stock',
+    'out_of_stock' => 'out of stock',
 ];

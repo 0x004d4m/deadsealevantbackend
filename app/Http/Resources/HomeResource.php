@@ -24,17 +24,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     property="categories",
  *     type="array",
  *     @OA\Items(ref="#/components/schemas/CategoryResource")
- *   )
+ *   ),
+ *   @OA\Property(
+ *     property="availability",
+ *     type="array",
+ *     @OA\Items(ref="#/components/schemas/AvailabilityResource")
+ *   ),
  * )
  */
 class HomeResource extends JsonResource
 {
-    public function __construct($languageFiles, $images, $categories)
+    public function __construct($languageFiles, $images, $categories, $availability)
     {
         parent::__construct([
             'translations' => $languageFiles,
             'images' => $images,
             'categories' => $categories,
+            'availability' => $availability,
         ]);
     }
     /**
@@ -48,6 +54,7 @@ class HomeResource extends JsonResource
             'translations' => $this->resource['translations'],
             'images' => ImageResource::collection($this->resource['images']),
             'categories' => CategoryResource::collection($this->resource['categories']),
+            'availability' => AvailabilityResource::collection($this->resource['availability']),
         ];
     }
 }

@@ -992,6 +992,19 @@
                 },
                 "type": "object"
             },
+            "AvailabilityResource": {
+                "title": "Availability Resource",
+                "description": "Resource of the Availability object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "CategoryResource": {
                 "title": "Category Resource",
                 "description": "Resource of the Category object",
@@ -1086,6 +1099,12 @@
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/CategoryResource"
+                        }
+                    },
+                    "availability": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AvailabilityResource"
                         }
                     }
                 },

@@ -16,4 +16,6 @@ return [
     'reviews' => 'المراجعات',
     'shipping_terms_and_conditions' => 'شروط وأحكام الشحن',
     'no_reviews' => 'لا توجد مراجعات لهذا المنتج',
+    'in_stock' => 'متوفر',
+    'out_of_stock' => 'غير متوفر',
 ];
