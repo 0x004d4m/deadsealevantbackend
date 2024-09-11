@@ -158,7 +158,7 @@ class HomeController extends Controller
      *     required=false,
      *     in="query",
      *     @OA\Schema(
-     *         type="integer"
+     *         type="string"
      *     )
      *  ),
      *  @OA\Parameter(

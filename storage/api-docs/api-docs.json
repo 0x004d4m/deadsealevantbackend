@@ -649,7 +649,7 @@
                         "description": "search",
                         "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     },
                     {
