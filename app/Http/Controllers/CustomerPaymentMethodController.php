@@ -26,6 +26,7 @@ class CustomerPaymentMethodController extends Controller
      *  description="Customer Payment Methods List",
      *  operationId="CustomerPaymentMethodList",
      *  tags={"CustomerPaymentMethod"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Response(
      *    response=200,
      *    description="Returns a list of payment methods",
@@ -105,6 +106,7 @@ class CustomerPaymentMethodController extends Controller
      *  description="Create Customer Payment Method",
      *  operationId="CustomerPaymentMethodCreate",
      *  tags={"CustomerPaymentMethod"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\RequestBody(
      *    required=true,
      *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodRequest")
@@ -162,6 +164,7 @@ class CustomerPaymentMethodController extends Controller
      *  description="Customer Payment Method Update",
      *  operationId="CustomerPaymentMethodUpdate",
      *  tags={"CustomerPaymentMethod"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
      *     name="id",
      *     description="Payment Method id",
@@ -227,6 +230,7 @@ class CustomerPaymentMethodController extends Controller
      *  description="Delete a Customer Payment Method",
      *  operationId="CustomerPaymentMethodDelete",
      *  tags={"CustomerPaymentMethod"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
      *     name="id",
      *     description="Payment Method id",

@@ -25,6 +25,7 @@ class CustomerAddressController extends Controller
      *  description="Customer Address List",
      *  operationId="CustomerAddressList",
      *  tags={"CustomerAddress"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Response(
      *    response=200,
      *    description="Returns a list of addresses",
@@ -104,6 +105,7 @@ class CustomerAddressController extends Controller
      *  description="Create Customer Address",
      *  operationId="CustomerAddressCreate",
      *  tags={"CustomerAddress"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\RequestBody(
      *    required=true,
      *    @OA\JsonContent(ref="#/components/schemas/AddressRequest")
@@ -163,6 +165,7 @@ class CustomerAddressController extends Controller
      *  description="Customer Address Update",
      *  operationId="CustomerAddressUpdate",
      *  tags={"CustomerAddress"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
      *     name="id",
      *     description="address id",
@@ -230,6 +233,7 @@ class CustomerAddressController extends Controller
      *  description="Delete a Customer Address",
      *  operationId="CustomerAddressDelete",
      *  tags={"CustomerAddress"},
+     *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
      *     name="id",
      *     description="Address id",

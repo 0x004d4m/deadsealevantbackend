@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CustomerAddressController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerPaymentMethodController;
 use App\Http\Middleware\CustomerAuth;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +15,7 @@ Route::prefix('customers')->group(function(){
     Route::post('reset_password', [CustomerAuthController::class, 'resetPassword']);
     Route::middleware(CustomerAuth::class)->group(function() {
         Route::post('logout', [CustomerAuthController::class, 'logout']);
+        Route::apiResource('addresses', CustomerAddressController::class);
+        Route::apiResource('payment_methods', CustomerPaymentMethodController::class);
     });
 });
