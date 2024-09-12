@@ -14,20 +14,26 @@ class CustomerPaymentMethod extends Model
 
     protected $fillable = [
         'customer_id',
-        'card_number_encrypted',
+        'card_number',
         'expiry_month',
         'expiry_year',
         'cvv',
+        'cardholder_name',
     ];
 
-    public function setCardNumberEncryptedAttribute($value)
+    public function customer()
     {
-        $this->attributes['card_number_encrypted'] = Crypt::encryptString($value);
+        return $this->belongsTo(Customer::class);
     }
 
-    public function getCardNumberDecryptedAttribute()
+    public function setCardNumberAttribute($value)
     {
-        return Crypt::decryptString($this->attributes['card_number_encrypted']);
+        $this->attributes['card_number'] = Crypt::encryptString($value);
+    }
+
+    public function getCardNumberAttribute()
+    {
+        return Crypt::decryptString($this->attributes['card_number']);
     }
 
     public function setCvvAttribute($value)

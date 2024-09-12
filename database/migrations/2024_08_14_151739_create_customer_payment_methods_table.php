@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('customer_payment_methods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('card_number_encrypted');
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->foreign('customer_id')->on('customers')->references('id');
+            $table->string('card_number');
             $table->string('expiry_month');
             $table->string('expiry_year');
+            $table->string('cvv');
             $table->string('cardholder_name');
             $table->timestamps();
             $table->softDeletes();

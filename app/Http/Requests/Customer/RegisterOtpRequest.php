@@ -38,8 +38,8 @@ class RegisterOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required|exists:customers,email_token',
-            'code' => 'required|exists:customers,email_code',
+            'token' => 'required|filled|exists:customers,email_token',
+            'code' => 'required|filled|exists:customers,email_code',
         ];
     }
 }

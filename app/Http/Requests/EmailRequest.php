@@ -4,6 +4,18 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="EmailRequest",
+ *     title="Email Request",
+ *     description="Request body for Email Request",
+ *     required={"email"},
+ *     @OA\Property(
+ *         property="email",
+ *         type="string"
+ *     ),
+ * )
+ */
 class EmailRequest extends FormRequest
 {
     /**
@@ -14,7 +26,7 @@ class EmailRequest extends FormRequest
     public function authorize()
     {
         // only allow updates if the user is logged in
-        return backpack_auth()->check();
+        return true;
     }
 
     /**

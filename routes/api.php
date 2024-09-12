@@ -14,15 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::get('languages', [LanguageController::class, 'index']);
 Route::get('home', [HomeController::class, 'index']);
 Route::post('contact_requests', [HomeController::class, 'contactRequest']);
+Route::post('emails', [HomeController::class, 'email']);
 Route::get('products', [HomeController::class, 'products']);
-Route::post('/payment', [PaymentController::class, 'processPayment']);
-
-Route::middleware('auth:api')->group(function () {
-    Route::post('/card-details', [CustomerPaymentMethodController::class, 'store']);
-    Route::get('/card-details', [CustomerPaymentMethodController::class, 'index']);
-    Route::get('/card-details/{id}', [CustomerPaymentMethodController::class, 'show']);
-    Route::put('/card-details/{id}', [CustomerPaymentMethodController::class, 'update']);
-    Route::delete('/card-details/{id}', [CustomerPaymentMethodController::class, 'destroy']);
-});
 
 require 'customer/auth.php';

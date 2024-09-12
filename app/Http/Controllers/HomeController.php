@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Exceptions\GeneralException;
 use App\Filters\ProductFilters;
 use App\Http\Requests\ContactRequestRequest;
+use App\Http\Requests\EmailRequest;
 use App\Http\Resources\HomeResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\ContactRequest;
+use App\Models\Email;
 use App\Models\Image;
 use App\Models\Product;
 use Backpack\LangFileManager\app\Models\Language;
@@ -261,5 +263,59 @@ class HomeController extends Controller
     public function products(Request $request)
     {
         return ProductResource::collection(Product::filter(new ProductFilters($request))->paginate(12));
+    }
+
+
+    /**
+     * @OA\Post(
+     *  path="/api/emails",
+     *  summary="Send An Email (news letter)",
+     *  description="Send An Email (news letter)",
+     *  operationId="Email",
+     *  tags={"Home"},
+     *  @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(ref="#/components/schemas/EmailRequest")
+     *  ),
+     *  @OA\Response(
+     *    response=204,
+     *    description="success",
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function email(EmailRequest $emailRequest)
+    {
+        try {
+            if(Email::where('email', $emailRequest->email)->count()==0){
+                Email::create([
+                    'email' => $emailRequest->email,
+                ]);
+            }
+            return response()->json()->setStatusCode(204);
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
     }
 }

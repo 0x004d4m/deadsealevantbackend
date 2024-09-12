@@ -41,12 +41,13 @@ class LoginRequest extends FormRequest
         return [
             'user' => [
                 'required',
+                'filled',
                 function ($attribute, $value, $fail) {
                     if (!DB::table('customers')->where('email', $value)->orWhere('username', $value)->exists()) {
                         $fail('The selected email or username is invalid.');
                     }
                 },],
-            'password' => 'required',
+            'password' => 'required|filled',
         ];
     }
 }

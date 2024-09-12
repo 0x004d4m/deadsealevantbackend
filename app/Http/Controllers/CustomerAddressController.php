@@ -3,37 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
-use App\Http\Requests\Customer\PaymentMethodRequest;
-use App\Http\Resources\Customer\PaymentMethodResource;
-use App\Models\CustomerPaymentMethod;
+use App\Http\Requests\Customer\AddressRequest;
+use App\Http\Resources\Customer\AddressResource;
+use App\Models\CustomerAddress;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Tag(
- *     name="CustomerPaymentMethod",
- *     description="API Endpoints of Customer Payment Methods"
+ *     name="CustomerAddress",
+ *     description="API Endpoints of Customer Address"
  * )
  */
-class CustomerPaymentMethodController extends Controller
+class CustomerAddressController extends Controller
 {
     /**
      * @OA\Get(
-     *  path="/api/customers/payment_methods",
-     *  summary="List Customer Payment Methods",
-     *  description="Customer Payment Methods List",
-     *  operationId="CustomerPaymentMethodList",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/customers/addresses",
+     *  summary="List Customer Addresses",
+     *  description="Customer Address List",
+     *  operationId="CustomerAddressList",
+     *  tags={"CustomerAddress"},
      *  @OA\Response(
      *    response=200,
-     *    description="Returns a list of payment methods",
+     *    description="Returns a list of addresses",
      *    @OA\JsonContent(
      *      @OA\Property(
      *        property="data",
      *        type="array",
-     *        @OA\Items(ref="#/components/schemas/PaymentMethodResource")
+     *        @OA\Items(ref="#/components/schemas/AddressResource")
      *      ),
      *      @OA\Property(
      *        property="links",
@@ -89,7 +88,7 @@ class CustomerPaymentMethodController extends Controller
     public function index(Request $request)
     {
         try {
-            return PaymentMethodResource::collection(CustomerPaymentMethod::where('customer_id', $request->customer_id)->get());
+            return AddressResource::collection(CustomerAddress::where('customer_id', $request->customer_id)->get());
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
@@ -100,19 +99,19 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Post(
-     *  path="/api/customers/payment_methods",
-     *  summary="Create Customer Payment Method",
-     *  description="Create Customer Payment Method",
-     *  operationId="CustomerPaymentMethodCreate",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/customers/addresses",
+     *  summary="Create Customer Address",
+     *  description="Create Customer Address",
+     *  operationId="CustomerAddressCreate",
+     *  tags={"CustomerAddress"},
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/AddressRequest")
      *  ),
      *  @OA\Response(
      *    response=201,
      *    description="Success",
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodResource")
+     *    @OA\JsonContent(ref="#/components/schemas/AddressResource")
      *  ),
      *  @OA\Response(
      *    response=500,
@@ -135,18 +134,20 @@ class CustomerPaymentMethodController extends Controller
      *  )
      * )
      */
-    public function store(PaymentMethodRequest $paymentMethodRequest)
+    public function store(AddressRequest $addressRequest)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::create([
-                'customer_id' => $paymentMethodRequest->customer_id,
-                'card_number' => $paymentMethodRequest->card_number,
-                'expiry_month' => $paymentMethodRequest->expiry_month,
-                'expiry_year' => $paymentMethodRequest->expiry_year,
-                'cvv' => $paymentMethodRequest->cvv,
-                'cardholder_name' => $paymentMethodRequest->cardholder_name,
+            $CustomerAddress = CustomerAddress::create([
+                'customer_id' => $addressRequest->customer_id,
+                'country_id' => $addressRequest->country_id,
+                'phone_number' => $addressRequest->phone_number,
+                'address' => $addressRequest->address,
+                'address_details' => $addressRequest->address_details,
+                'city' => $addressRequest->city,
+                'state' => $addressRequest->state,
+                'zip_code' => $addressRequest->zip_code,
             ]);
-            return new PaymentMethodResource($CustomerPaymentMethod);
+            return new AddressResource($CustomerAddress);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
@@ -157,14 +158,14 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Put(
-     *  path="/api/customers/payment_methods/{id}",
-     *  summary="Update Customer Payment Method",
-     *  description="Customer Payment Method Update",
-     *  operationId="CustomerPaymentMethodUpdate",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/customers/addresses/{id}",
+     *  summary="Update Customer Address",
+     *  description="Customer Address Update",
+     *  operationId="CustomerAddressUpdate",
+     *  tags={"CustomerAddress"},
      *  @OA\Parameter(
      *     name="id",
-     *     description="Payment Method id",
+     *     description="address id",
      *     required=true,
      *     in="path",
      *     @OA\Schema(
@@ -173,7 +174,7 @@ class CustomerPaymentMethodController extends Controller
      *  ),
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/AddressRequest")
      *  ),
      *  @OA\Response(
      *    response=204,
@@ -200,16 +201,18 @@ class CustomerPaymentMethodController extends Controller
      *  )
      * )
      */
-    public function update(PaymentMethodRequest $paymentMethodRequest, $id)
+    public function update(AddressRequest $addressRequest, $id)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::where('customer_id', $paymentMethodRequest->customer_id)->where('id', $id)->first();
-            $CustomerPaymentMethod->update([
-                'card_number' => $paymentMethodRequest->card_number,
-                'expiry_month' => $paymentMethodRequest->expiry_month,
-                'expiry_year' => $paymentMethodRequest->expiry_year,
-                'cvv' => $paymentMethodRequest->cvv,
-                'cardholder_name' => $paymentMethodRequest->cardholder_name,
+            $CustomerAddress = CustomerAddress::where('customer_id', $addressRequest->customer_id)->where('id', $id)->first();
+            $CustomerAddress->update([
+                'country_id' => $addressRequest->country_id,
+                'phone_number' => $addressRequest->phone_number,
+                'address' => $addressRequest->address,
+                'address_details' => $addressRequest->address_details,
+                'city' => $addressRequest->city,
+                'state' => $addressRequest->state,
+                'zip_code' => $addressRequest->zip_code,
             ]);
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
@@ -222,14 +225,14 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Delete(
-     *  path="/api/customers/payment_methods/{id}",
-     *  summary="Delete a Customer Payment Method",
-     *  description="Delete a Customer Payment Method",
-     *  operationId="CustomerPaymentMethodDelete",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/customers/addresses/{id}",
+     *  summary="Delete a Customer Address",
+     *  description="Delete a Customer Address",
+     *  operationId="CustomerAddressDelete",
+     *  tags={"CustomerAddress"},
      *  @OA\Parameter(
      *     name="id",
-     *     description="Payment Method id",
+     *     description="Address id",
      *     required=true,
      *     in="path",
      *     @OA\Schema(
@@ -264,8 +267,8 @@ class CustomerPaymentMethodController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::where('customer_id', $request->customer_id)->where('id', $id)->first();
-            $CustomerPaymentMethod->delete();
+            $CustomerAddress = CustomerAddress::where('customer_id', $request->customer_id)->where('id', $id)->first();
+            $CustomerAddress->delete();
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
             return $e->render();

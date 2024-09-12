@@ -6,29 +6,33 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *     schema="RegisterRequest",
- *     title="RegisterRequest",
- *     description="Request body for Register Request",
- *     required={"username", "email", "password", "password_confirmation"},
+ *     schema="PaymentMethodRequest",
+ *     title="Payment Method Request",
+ *     description="Request body for Payment Method Request",
+ *     required={"card_number", "expiry_month", "expiry_year", "cvv", "cardholder_name"},
  *     @OA\Property(
- *         property="username",
+ *         property="card_number",
  *         type="string"
  *     ),
  *     @OA\Property(
- *         property="email",
+ *         property="expiry_month",
  *         type="string"
  *     ),
  *     @OA\Property(
- *         property="password",
+ *         property="expiry_year",
  *         type="string"
  *     ),
  *     @OA\Property(
- *         property="password_confirmation",
+ *         property="cvv",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="cardholder_name",
  *         type="string"
  *     ),
  * )
  */
-class RegisterRequest extends FormRequest
+class PaymentMethodRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -46,9 +50,11 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|filled|unique:customers,username',
-            'email' => 'required|filled|unique:customers,email',
-            'password' => 'required|filled|confirmed',
+            'card_number' => 'required|filled',
+            'expiry_month' => 'required|filled',
+            'expiry_year' => 'required|filled',
+            'cvv' => 'required|filled',
+            'cardholder_name' => 'required|filled',
         ];
     }
 }

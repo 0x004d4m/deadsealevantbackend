@@ -38,8 +38,8 @@ class ForgetOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => 'required|exists:customers,forget_token',
-            'code' => 'required|exists:customers,forget_code',
+            'token' => 'required|filled|exists:customers,forget_token',
+            'code' => 'required|filled|exists:customers,forget_code',
         ];
     }
 }
