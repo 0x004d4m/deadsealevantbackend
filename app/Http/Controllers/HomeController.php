@@ -81,7 +81,9 @@ class HomeController extends Controller
         }
         $images = Image::all();
         $categories = Category::all();
-        $availability = [['id' => 'true', 'name' => __('products.in_stock'), ['id' => 'false', 'name' => __('products.out_of_stock')]]];
+        $availability = [
+            ['id' => 'true', 'name' => __('products.in_stock')], ['id' => 'false', 'name' => __('products.out_of_stock')]
+        ];
         return new HomeResource($languageFiles, $images, $categories, $availability);
     }
 
@@ -305,7 +307,7 @@ class HomeController extends Controller
     public function email(EmailRequest $emailRequest)
     {
         try {
-            if(Email::where('email', $emailRequest->email)->count()==0){
+            if (Email::where('email', $emailRequest->email)->count() == 0) {
                 Email::create([
                     'email' => $emailRequest->email,
                 ]);
