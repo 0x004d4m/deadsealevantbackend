@@ -81,7 +81,7 @@ class HomeController extends Controller
         }
         $images = Image::all();
         $categories = Category::all();
-        $availability = [['id' => 'true', 'name' => __('products.out_of_stock')], ['id' => 'false', 'name' => __('products.in_stock')]];
+        $availability = [['id' => 'true', 'name' => __('products.in_stock'), ['id' => 'false', 'name' => __('products.out_of_stock')]]];
         return new HomeResource($languageFiles, $images, $categories, $availability);
     }
 
