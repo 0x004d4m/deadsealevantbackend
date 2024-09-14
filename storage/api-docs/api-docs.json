@@ -1242,7 +1242,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ForgetRequest"
+                                "$ref": "#/components/schemas/ProfileRequest"
                             }
                         }
                     }
@@ -2256,6 +2256,23 @@
                         "type": "string"
                     },
                     "cardholder_name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ProfileRequest": {
+                "title": "Profile Request",
+                "description": "Request body for Profile Request",
+                "required": [
+                    "first_name",
+                    "last_name"
+                ],
+                "properties": {
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
                         "type": "string"
                     }
                 },

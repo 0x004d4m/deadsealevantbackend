@@ -4,6 +4,22 @@ namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="ProfileRequest",
+ *     title="Profile Request",
+ *     description="Request body for Profile Request",
+ *     required={"first_name", "last_name"},
+ *     @OA\Property(
+ *         property="first_name",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="last_name",
+ *         type="string"
+ *     ),
+ * )
+ */
 class ProfileRequest extends FormRequest
 {
     /**

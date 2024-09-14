@@ -423,7 +423,7 @@ class CustomerAuthController extends Controller
      *  security={{"bearerAuth": {}}},
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/ForgetRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/ProfileRequest")
      *  ),
      *  @OA\Response(
      *    response=204,
