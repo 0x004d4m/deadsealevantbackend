@@ -214,6 +214,10 @@ class CustomerAuthController extends Controller
      *    )
      *  ),
      *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
      *    response=422,
      *    description="Wrong credentials response",
      *    @OA\JsonContent(

@@ -73,6 +73,10 @@ class CustomerAddressController extends Controller
      *    )
      *  ),
      *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
      *    response=422,
      *    description="Wrong input response",
      *    @OA\JsonContent(
@@ -121,6 +125,10 @@ class CustomerAddressController extends Controller
      *    @OA\JsonContent(
      *      @OA\Property(property="error")
      *    )
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
      *  ),
      *  @OA\Response(
      *    response=422,
@@ -191,6 +199,10 @@ class CustomerAddressController extends Controller
      *    )
      *  ),
      *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
      *    response=422,
      *    description="Wrong input response",
      *    @OA\JsonContent(
@@ -253,6 +265,10 @@ class CustomerAddressController extends Controller
      *    @OA\JsonContent(
      *      @OA\Property(property="error")
      *    )
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
      *  ),
      *  @OA\Response(
      *    response=422,

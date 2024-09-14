@@ -3,38 +3,40 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
-use App\Http\Requests\Customer\PaymentMethodRequest;
-use App\Http\Resources\Customer\PaymentMethodResource;
-use App\Models\CustomerPaymentMethod;
+use App\Http\Requests\CartRequest;
+use App\Http\Resources\CartResource;
+use App\Http\Resources\Guest\RegisterResource;
+use App\Models\Cart;
+use App\Models\Guest;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * @OA\Tag(
- *     name="CustomerPaymentMethod",
- *     description="API Endpoints of Customer Payment Methods"
+ *     name="Cart",
+ *     description="API Endpoints of Cart"
  * )
  */
-class CustomerPaymentMethodController extends Controller
+class CartController extends Controller
 {
     /**
      * @OA\Get(
-     *  path="/api/customers/payment_methods",
-     *  summary="List Customer Payment Methods",
-     *  description="Customer Payment Methods List",
-     *  operationId="CustomerPaymentMethodList",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/carts",
+     *  summary="List Cart Items",
+     *  description="Cart Items List",
+     *  operationId="CartList",
+     *  tags={"Cart"},
      *  security={{"bearerAuth": {}}},
      *  @OA\Response(
      *    response=200,
-     *    description="Returns a list of payment methods",
+     *    description="Returns a list of cart items",
      *    @OA\JsonContent(
      *      @OA\Property(
      *        property="data",
      *        type="array",
-     *        @OA\Items(ref="#/components/schemas/PaymentMethodResource")
+     *        @OA\Items(ref="#/components/schemas/CartResource")
      *      ),
      *      @OA\Property(
      *        property="links",
@@ -94,7 +96,19 @@ class CustomerPaymentMethodController extends Controller
     public function index(Request $request)
     {
         try {
-            return PaymentMethodResource::collection(CustomerPaymentMethod::where('customer_id', $request->customer_id)->get());
+            if ($request->customer_id) {
+                if (Cart::where('customer_id', $request->customer_id)->whereNull('order_id')->count() == 0) {
+                    return CartResource::collection(Cart::where('customer_id', $request->customer_id)->whereNull('order_id')->get());
+                }
+            }
+
+            if ($request->guest_id) {
+                if (Cart::where('guest_id', $request->guest_id)->whereNull('order_id')->count() == 0) {
+                    return CartResource::collection(Cart::where('guest_id', $request->guest_id)->whereNull('order_id')->get());
+                }
+            }
+
+            return CartResource::collection([]);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
@@ -105,20 +119,28 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Post(
-     *  path="/api/customers/payment_methods",
-     *  summary="Create Customer Payment Method",
-     *  description="Create Customer Payment Method",
-     *  operationId="CustomerPaymentMethodCreate",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/carts",
+     *  summary="Add Item To Cart",
+     *  description="Add Item To Cart",
+     *  operationId="CartCreate",
+     *  tags={"Cart"},
      *  security={{"bearerAuth": {}}},
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/CartRequest")
+     *  ),
+     *  @OA\Response(
+     *    response=204,
+     *    description="Success",
      *  ),
      *  @OA\Response(
      *    response=201,
      *    description="Success",
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodResource")
+     *    @OA\JsonContent(ref="#/components/schemas/GuestRegisterResource")
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
      *  ),
      *  @OA\Response(
      *    response=500,
@@ -126,10 +148,6 @@ class CustomerPaymentMethodController extends Controller
      *    @OA\JsonContent(
      *      @OA\Property(property="error")
      *    )
-     *  ),
-     *  @OA\Response(
-     *    response=401,
-     *    description="Unauthorized",
      *  ),
      *  @OA\Response(
      *    response=422,
@@ -145,18 +163,44 @@ class CustomerPaymentMethodController extends Controller
      *  )
      * )
      */
-    public function store(PaymentMethodRequest $paymentMethodRequest)
+    public function store(CartRequest $cartRequest)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::create([
-                'customer_id' => $paymentMethodRequest->customer_id,
-                'card_number' => $paymentMethodRequest->card_number,
-                'expiry_month' => $paymentMethodRequest->expiry_month,
-                'expiry_year' => $paymentMethodRequest->expiry_year,
-                'cvv' => $paymentMethodRequest->cvv,
-                'cardholder_name' => $paymentMethodRequest->cardholder_name,
+            if ($cartRequest->customer_id) {
+                if (Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->count() == 0) {
+                    Cart::create([
+                        'quantity' => $cartRequest->quantity,
+                        'product_id' => $cartRequest->product_id,
+                        'customer_id' => $cartRequest->customer_id,
+                    ]);
+                    return response()->json()->setStatusCode(204);
+                } else {
+                    throw new GeneralException(['product_id' => ['Product already added in cart']]);
+                }
+            }
+
+            if ($cartRequest->guest_id) {
+                if (Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->count() == 0) {
+                    Cart::create([
+                        'quantity' => $cartRequest->quantity,
+                        'product_id' => $cartRequest->product_id,
+                        'guest_id' => $cartRequest->guest_id,
+                    ]);
+                    return response()->json()->setStatusCode(204);
+                } else {
+                    throw new GeneralException(['product_id' => ['Product already added in cart']]);
+                }
+            }
+
+            $Guest = Guest::create([
+                'access_token' => Str::random(60),
             ]);
-            return new PaymentMethodResource($CustomerPaymentMethod);
+            Cart::create([
+                'quantity' => $cartRequest->quantity,
+                'product_id' => $cartRequest->product_id,
+                'guest_id' => $Guest->id,
+            ]);
+            return new RegisterResource($Guest);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
@@ -167,24 +211,15 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Put(
-     *  path="/api/customers/payment_methods/{id}",
-     *  summary="Update Customer Payment Method",
-     *  description="Customer Payment Method Update",
-     *  operationId="CustomerPaymentMethodUpdate",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/carts",
+     *  summary="Update Cart Item Quantity",
+     *  description="Update Cart Item Quantity",
+     *  operationId="CartUpdate",
+     *  tags={"Cart"},
      *  security={{"bearerAuth": {}}},
-     *  @OA\Parameter(
-     *     name="id",
-     *     description="Payment Method id",
-     *     required=true,
-     *     in="path",
-     *     @OA\Schema(
-     *         type="integer"
-     *     )
-     *  ),
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/PaymentMethodRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/CartRequest")
      *  ),
      *  @OA\Response(
      *    response=204,
@@ -215,18 +250,30 @@ class CustomerPaymentMethodController extends Controller
      *  )
      * )
      */
-    public function update(PaymentMethodRequest $paymentMethodRequest, $id)
+    public function update(CartRequest $cartRequest)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::where('customer_id', $paymentMethodRequest->customer_id)->where('id', $id)->first();
-            $CustomerPaymentMethod->update([
-                'card_number' => $paymentMethodRequest->card_number,
-                'expiry_month' => $paymentMethodRequest->expiry_month,
-                'expiry_year' => $paymentMethodRequest->expiry_year,
-                'cvv' => $paymentMethodRequest->cvv,
-                'cardholder_name' => $paymentMethodRequest->cardholder_name,
-            ]);
-            return response()->json()->setStatusCode(204);
+            if ($cartRequest->customer_id) {
+                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->first();
+                if ($Cart) {
+                    $Cart->update([
+                        'quantity' => $cartRequest->quantity,
+                    ]);
+                    return response()->json()->setStatusCode(204);
+                }
+            }
+
+            if ($cartRequest->guest_id) {
+                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->first();
+                if ($Cart) {
+                    $Cart->update([
+                        'quantity' => $cartRequest->quantity,
+                    ]);
+                    return response()->json()->setStatusCode(204);
+                }
+            }
+
+            throw new GeneralException(['product_id' => ['No Product In Cart']]);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
@@ -237,15 +284,15 @@ class CustomerPaymentMethodController extends Controller
 
     /**
      * @OA\Delete(
-     *  path="/api/customers/payment_methods/{id}",
-     *  summary="Delete a Customer Payment Method",
-     *  description="Delete a Customer Payment Method",
-     *  operationId="CustomerPaymentMethodDelete",
-     *  tags={"CustomerPaymentMethod"},
+     *  path="/api/carts/{id}",
+     *  summary="Delete a Cart Item",
+     *  description="Delete a Cart Item",
+     *  operationId="CartDelete",
+     *  tags={"Cart"},
      *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
      *     name="id",
-     *     description="Payment Method id",
+     *     description="Cart id",
      *     required=true,
      *     in="path",
      *     @OA\Schema(
@@ -284,9 +331,21 @@ class CustomerPaymentMethodController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $CustomerPaymentMethod = CustomerPaymentMethod::where('customer_id', $request->customer_id)->where('id', $id)->first();
-            $CustomerPaymentMethod->delete();
-            return response()->json()->setStatusCode(204);
+            $Cart = null;
+            if ($request->customer_id) {
+                $Cart = Cart::where('id', $id)->where('customer_id', $request->customer_id)->whereNull('order_id')->first();
+            }
+
+            if ($request->guest_id) {
+                $Cart = Cart::where('id', $id)->where('guest_id', $request->guest_id)->whereNull('order_id')->first();
+            }
+
+            if ($Cart) {
+                $Cart->delete();
+                return response()->json()->setStatusCode(204);
+            } else {
+                throw new GeneralException(['id' => ['Wrong Cart Id']]);
+            }
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {

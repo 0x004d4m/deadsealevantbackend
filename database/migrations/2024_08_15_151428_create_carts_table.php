@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreign('product_id')->on('products')->references('id');
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->on('customers')->references('id');
+            $table->unsignedBigInteger('guest_id');
+            $table->foreign('guest_id')->on('guests')->references('id');
             $table->unsignedBigInteger('order_id')->nullable();
             $table->foreign('order_id')->on('orders')->references('id');
             $table->timestamps();
