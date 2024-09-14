@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Checkout',
+    'checkout' => 'Checkout',
     'title' => 'Your Cart',
     'items' => 'Items',
     'name' => 'Item name',
