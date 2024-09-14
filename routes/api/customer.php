@@ -15,6 +15,7 @@ Route::prefix('customers')->group(function(){
     Route::post('reset_password', [CustomerAuthController::class, 'resetPassword']);
     Route::middleware(CustomerAuth::class)->group(function() {
         Route::post('logout', [CustomerAuthController::class, 'logout']);
+        Route::put('profile', [CustomerAuthController::class, 'profile']);
         Route::apiResource('addresses', CustomerAddressController::class);
         Route::apiResource('payment_methods', CustomerPaymentMethodController::class);
     });

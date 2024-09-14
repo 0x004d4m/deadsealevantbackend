@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
-use App\Http\Requests\Customer\{ForgetOtpRequest, ForgetRequest, LoginRequest, RegisterOtpRequest, RegisterRequest, ResetPasswordRequest};
+use App\Http\Requests\Customer\{ForgetOtpRequest, ForgetRequest, LoginRequest, ProfileRequest, RegisterOtpRequest, RegisterRequest, ResetPasswordRequest};
 use App\Http\Resources\Customer\{ForgetOtpResource, ForgetResource, CustomerResource, RegisterResource};
 use App\Mail\{ForgetMail, RegisterMail};
 use App\Models\Customer;
@@ -404,6 +404,64 @@ class CustomerAuthController extends Controller
                 'password' => Hash::make($resetPasswordRequest->password),
             ]);
 
+            return response()->json()->setStatusCode(204);
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
+    }
+
+    /**
+     * @OA\put(
+     *  path="/api/customers/profile",
+     *  summary="Update Customer Profile",
+     *  description="Update Customer Profile",
+     *  operationId="UpdateCustomerProfile",
+     *  tags={"CustomerAuth"},
+     *  security={{"bearerAuth": {}}},
+     *  @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(ref="#/components/schemas/ForgetRequest")
+     *  ),
+     *  @OA\Response(
+     *    response=204,
+     *    description="success",
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function profile(ProfileRequest $profileRequest)
+    {
+        try {
+            $Customer = Customer::where('id', $profileRequest->customer_id)->first();
+            $Customer->update([
+                'first_name' => $profileRequest->first_name,
+                'last_name' => $profileRequest->last_name,
+            ]);
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
             return $e->render();
