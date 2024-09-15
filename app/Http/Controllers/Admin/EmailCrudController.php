@@ -70,4 +70,8 @@ class EmailCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
+    }
 }

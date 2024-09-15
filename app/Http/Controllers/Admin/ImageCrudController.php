@@ -83,4 +83,8 @@ class ImageCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
+    }
 }

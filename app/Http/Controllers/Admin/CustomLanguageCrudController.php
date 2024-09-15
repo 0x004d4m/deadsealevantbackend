@@ -134,4 +134,8 @@ class CustomLanguageCrudController extends BaseLanguageCrudController
             File::put($configPath, $configContent);
         }
     }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
+    }
 }

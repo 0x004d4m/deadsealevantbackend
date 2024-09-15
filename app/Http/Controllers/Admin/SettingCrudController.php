@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ContactRequestRequest;
+use App\Http\Requests\SettingRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class ContactRequestCrudController
+ * Class SettingCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class ContactRequestCrudController extends CrudController
+class SettingCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -24,9 +23,9 @@ class ContactRequestCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\ContactRequest::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/contact-request');
-        CRUD::setEntityNameStrings('contact request', 'contact requests');
+        CRUD::setModel(\App\Models\Setting::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/setting');
+        CRUD::setEntityNameStrings('setting', 'settings');
     }
 
     /**
@@ -53,7 +52,7 @@ class ContactRequestCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(ContactRequestRequest::class);
+        CRUD::setValidation(SettingRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
 
         /**

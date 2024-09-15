@@ -2230,6 +2230,9 @@
                         "items": {
                             "$ref": "#/components/schemas/AvailabilityResource"
                         }
+                    },
+                    "setting": {
+                        "$ref": "#/components/schemas/SettingResource"
                     }
                 },
                 "type": "object"
@@ -2379,6 +2382,22 @@
                     },
                     "customer_id": {
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "SettingResource": {
+                "title": "SettingResource",
+                "description": "Resource of the Settings object",
+                "properties": {
+                    "tax": {
+                        "type": "string"
+                    },
+                    "shipping": {
+                        "type": "string"
+                    },
+                    "shipping_free_after": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

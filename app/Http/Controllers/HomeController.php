@@ -13,6 +13,7 @@ use App\Models\ContactRequest;
 use App\Models\Email;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Setting;
 use Backpack\LangFileManager\app\Models\Language;
 use Exception;
 use Illuminate\Http\Request;
@@ -84,7 +85,8 @@ class HomeController extends Controller
         $availability = [
             ['id' => 'true', 'name' => __('products.in_stock')], ['id' => 'false', 'name' => __('products.out_of_stock')]
         ];
-        return new HomeResource($languageFiles, $images, $categories, $availability);
+        $setting = Setting::first();
+        return new HomeResource($languageFiles, $images, $categories, $availability, $setting);
     }
 
     /**

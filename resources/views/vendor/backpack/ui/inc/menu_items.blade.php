@@ -13,6 +13,7 @@
     <x-backpack::menu-dropdown-item title="Site texts" icon="la la-language" :link="backpack_url('language/texts')" />
 </x-backpack::menu-dropdown>
 
+<x-backpack::menu-item title="Settings" icon="la la-question" :link="backpack_url('setting')" />
 <x-backpack::menu-item title='Logs' icon='la la-terminal' :link="backpack_url('log')" />
 <x-backpack::menu-item title="images" icon="la la-question" :link="backpack_url('images')" />
 <x-backpack::menu-item title="Categories" icon="la la-question" :link="backpack_url('category')" />

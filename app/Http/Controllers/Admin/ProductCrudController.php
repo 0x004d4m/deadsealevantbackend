@@ -40,6 +40,7 @@ class ProductCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::setFromDb(); // set columns from db columns.
+        $this->crud->removeColumn('description');
         $this->crud->addColumn('category_id', [
             'label' => "Category",
             'type' => "select",
@@ -58,7 +59,7 @@ class ProductCrudController extends CrudController
         ]);
         $this->crud->setColumnDetails('image', [
             'name'   => 'image',
-            'type'   => 'url',
+            'type'   => 'image',
             'label'  => 'Image',
             'function' => function ($entry) {
                 if (strpos($entry->image, 'http') === 0) {
@@ -106,5 +107,10 @@ class ProductCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
+        $this->crud->addColumn('description');
     }
 }

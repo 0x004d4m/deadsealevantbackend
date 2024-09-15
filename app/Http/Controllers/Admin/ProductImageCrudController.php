@@ -59,7 +59,7 @@ class ProductImageCrudController extends CrudController
         ]);
         $this->crud->setColumnDetails('image', [
             'name'   => 'image',
-            'type'   => 'url',
+            'type'   => 'image',
             'label'  => 'Image',
             'function' => function ($entry) {
                 if (strpos($entry->image, 'http') === 0) {
@@ -106,5 +106,9 @@ class ProductImageCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 }
