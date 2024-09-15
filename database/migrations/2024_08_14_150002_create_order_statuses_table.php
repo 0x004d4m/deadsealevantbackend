@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_statuses', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-            $table->string('color');
+            $table->text('color');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -21,6 +21,10 @@ return new class extends Migration
             $table->foreign('customer_address_id')->on('customer_addresses')->references('id');
             $table->unsignedBigInteger('order_status_id');
             $table->foreign('order_status_id')->on('order_statuses')->references('id');
+            $table->double('subtotal')->nullable();
+            $table->double('tax')->nullable();
+            $table->double('shipping')->nullable();
+            $table->double('total')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

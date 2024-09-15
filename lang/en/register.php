@@ -6,6 +6,7 @@ return [
     'username' => 'User name or Email',
     'email' => 'Email',
     'password' => 'Password',
+    'reset_password' => 'Password',
     'confirm_password' => 'Confirm password',
     'confirm_new_password' => 'Confirm New password',
     'register_button' => 'Sign up',

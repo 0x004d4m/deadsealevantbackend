@@ -16,4 +16,7 @@ return [
     'security_key_title' => 'Enter security key',
     'security_key_description' => 'Please check your email for a message with your code. Your code is 6 numbers long.',
     'security_key_button' => 'Continue',
+    'reset_password' => 'Reset Password',
+    'new_password' => 'New password',
+    'confirm_new_password' => 'Confirm New password',
 ];

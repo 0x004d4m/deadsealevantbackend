@@ -3,10 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
+use App\Models\Cart;
+use App\Models\Guest;
+use App\Models\Order;
+use App\Models\Setting;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @OA\Tag(
+ *     name="Order",
+ *     description="API Endpoints of Order"
+ * )
+ */
 class OrderController extends Controller
 {
     /**
@@ -53,41 +63,68 @@ class OrderController extends Controller
     public function store(Request $orderRequest)
     {
         try {
-            // if ($cartRequest->customer_id) {
-            //     if (Order::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->count() == 0) {
-            //         Cart::create([
-            //             'quantity' => $cartRequest->quantity,
-            //             'product_id' => $cartRequest->product_id,
-            //             'customer_id' => $cartRequest->customer_id,
-            //         ]);
-            //         return response()->json()->setStatusCode(204);
-            //     } else {
-            //         throw new GeneralException(['product_id' => ['Product already added in cart']]);
-            //     }
-            // }
+            if ($orderRequest->customer_id) {
+                $subtotal = 0;
+                foreach (Cart::where('customer_id', $orderRequest->customer_id)->whereNull('order_id')->get() as $Cart) {
+                    $subtotal += ($Cart->product->price * $Cart->quantity);
+                }
+                $Setting = Setting::first();
+                $tax = $Setting->tax;
+                $shipping = ($subtotal > $Setting->shipping_free_after) ? 0 : $Setting->shipping;
+                $subtotalTax = $subtotal * $Setting->tax;
+                $Order = Order::create([
+                    'customer_id' => $orderRequest->customer_id,
+                    'customer_address_id' => $orderRequest->customer_address_id,
+                    'order_status_id' => 1,
+                    'subtotal' => $subtotal,
+                    'tax' => $tax,
+                    'shipping' => $shipping,
+                    'total' => ($subtotal + $shipping + $subtotalTax),
+                ]);
+                foreach (Cart::where('customer_id', $orderRequest->customer_id)->whereNull('order_id')->get() as $Cart) {
+                    $Cart->update([
+                        'order_id' => $Order->id
+                    ]);
+                }
+                return response()->json()->setStatusCode(204);
+            }
 
-            // if ($cartRequest->guest_id) {
-            //     if (Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->count() == 0) {
-            //         Cart::create([
-            //             'quantity' => $cartRequest->quantity,
-            //             'product_id' => $cartRequest->product_id,
-            //             'guest_id' => $cartRequest->guest_id,
-            //         ]);
-            //         return response()->json()->setStatusCode(204);
-            //     } else {
-            //         throw new GeneralException(['product_id' => ['Product already added in cart']]);
-            //     }
-            // }
-
-            // $Guest = Guest::create([
-            //     'access_token' => Str::random(60),
-            // ]);
-            // Cart::create([
-            //     'quantity' => $cartRequest->quantity,
-            //     'product_id' => $cartRequest->product_id,
-            //     'guest_id' => $Guest->id,
-            // ]);
-            // return new RegisterResource($Guest);
+            if ($orderRequest->guest_id) {
+                $Guest = Guest::where('id', $orderRequest->guest_id)->first();
+                $subtotal = 0;
+                foreach (Cart::where('guest_id', $orderRequest->guest_id)->whereNull('order_id')->get() as $Cart) {
+                    $subtotal += ($Cart->product->price * $Cart->quantity);
+                }
+                $Setting = Setting::first();
+                $tax = $Setting->tax;
+                $shipping = ($subtotal > $Setting->shipping_free_after) ? 0 : $Setting->shipping;
+                $subtotalTax = $subtotal * $Setting->tax;
+                $Order = Order::create([
+                    'guest_id' => $orderRequest->guest_id,
+                    'order_status_id' => 1,
+                    'subtotal' => $subtotal,
+                    'tax' => $tax,
+                    'shipping' => $shipping,
+                    'total' => ($subtotal + $shipping + $subtotalTax),
+                ]);
+                foreach (Cart::where('guest_id', $orderRequest->guest_id)->whereNull('order_id')->get() as $Cart) {
+                    $Cart->update([
+                        'order_id' => $Order->id
+                    ]);
+                }
+                $Guest->update([
+                    'first_name' => $orderRequest->first_name,
+                    'last_name' => $orderRequest->last_name,
+                    'country_id' => $orderRequest->country_id,
+                    'phone_number' => $orderRequest->phone_number,
+                    'address' => $orderRequest->address,
+                    'address_details' => $orderRequest->address_details,
+                    'city' => $orderRequest->city,
+                    'state' => $orderRequest->state,
+                    'zip_code' => $orderRequest->zip_code,
+                ]);
+                return response()->json()->setStatusCode(204);
+            }
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
