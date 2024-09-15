@@ -267,6 +267,57 @@ class HomeController extends Controller
         return ProductResource::collection(Product::filter(new ProductFilters($request))->paginate(12));
     }
 
+    /**
+     * @OA\Get(
+     *  path="/api/products/{id}",
+     *  summary="Get Product By Id",
+     *  description="Get Product By Id",
+     *  operationId="GetProduct",
+     *  tags={"Home"},
+     *  @OA\Parameter(
+     *     name="id",
+     *     description="product id",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="",
+     *    @OA\JsonContent(
+     *      @OA\Property(
+     *        property="data",
+     *        ref="#/components/schemas/ProductResource"
+     *      ),
+     *    ),
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong input response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function product(Request $request, $id)
+    {
+        return new ProductResource(Product::where('id', $id)->first());
+    }
 
     /**
      * @OA\Post(
