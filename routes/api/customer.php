@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CustomerAddressController;
 use App\Http\Controllers\CustomerAuthController;
-use App\Http\Controllers\CustomerPaymentMethodController;
 use App\Http\Middleware\CustomerAuth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +16,5 @@ Route::prefix('customers')->group(function(){
         Route::post('logout', [CustomerAuthController::class, 'logout']);
         Route::put('profile', [CustomerAuthController::class, 'profile']);
         Route::apiResource('addresses', CustomerAddressController::class);
-        Route::apiResource('payment_methods', CustomerPaymentMethodController::class);
     });
 });
