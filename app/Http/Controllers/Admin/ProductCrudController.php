@@ -39,6 +39,7 @@ class ProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addColumn('id');
         CRUD::setFromDb(); // set columns from db columns.
         $this->crud->removeColumn('description');
         $this->crud->addColumn('category_id', [
