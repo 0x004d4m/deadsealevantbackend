@@ -16,4 +16,8 @@ return [
     'security_key_title' => 'أدخل المفتاح الأمني',
     'security_key_description' => 'يرجى التحقق من بريدك الإلكتروني للرسالة التي تحتوي على الكود الخاص بك. الكود مكون من 6 أرقام.',
     'security_key_button' => 'استمرار',
+    'reset_password' => 'تغيير كلمة المرور',
+    'reset_new_password' => 'كلمة مرور جديدة',
+    'reset_confirm_new_password' => 'تاكيد كلمة المرور الجديدة',
+    'reset_button' => 'استمرار',
 ];
