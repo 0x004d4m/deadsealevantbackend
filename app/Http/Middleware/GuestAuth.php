@@ -18,10 +18,6 @@ class GuestAuth
     public function handle(Request $request, Closure $next): Response
     {
         $Authorization = str_replace('Bearer ', '', $request->header('Authorization'));
-        if(!$Authorization){
-            return response()->json()->setStatusCode(401);
-        }
-
         $Customer = Customer::where('access_token', $Authorization)->first();
         if($Customer){
             $request->merge(['customer_id' => $Customer->id]);
