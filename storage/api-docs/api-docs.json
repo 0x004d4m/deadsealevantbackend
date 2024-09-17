@@ -295,80 +295,6 @@
                 ]
             }
         },
-        "/api/carts/{id}": {
-            "delete": {
-                "tags": [
-                    "Cart"
-                ],
-                "summary": "Delete a Cart Item",
-                "description": "Delete a Cart Item",
-                "operationId": "CartDelete",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Cart id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Success"
-                    },
-                    "500": {
-                        "description": "Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {}
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "422": {
-                        "description": "Wrong input response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "dynamic-error-keys": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/customers/addresses": {
             "get": {
                 "tags": [
@@ -2605,6 +2531,9 @@
                     "stock": {
                         "type": "number",
                         "format": "double"
+                    },
+                    "quantity_in_cart": {
+                        "type": "integer"
                     },
                     "shipping_terms": {
                         "type": "string"

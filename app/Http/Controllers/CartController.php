@@ -256,9 +256,13 @@ class CartController extends Controller
             if ($cartRequest->customer_id) {
                 $Cart = Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->first();
                 if ($Cart) {
-                    $Cart->update([
-                        'quantity' => $cartRequest->quantity,
-                    ]);
+                    if($cartRequest->quantity == 0){
+                        $Cart->delete();
+                    }else{
+                        $Cart->update([
+                            'quantity' => $cartRequest->quantity,
+                        ]);
+                    }
                     return response()->json()->setStatusCode(204);
                 }
             }
@@ -266,86 +270,18 @@ class CartController extends Controller
             if ($cartRequest->guest_id) {
                 $Cart = Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->first();
                 if ($Cart) {
-                    $Cart->update([
-                        'quantity' => $cartRequest->quantity,
-                    ]);
+                    if ($cartRequest->quantity == 0) {
+                        $Cart->delete();
+                    } else {
+                        $Cart->update([
+                            'quantity' => $cartRequest->quantity,
+                        ]);
+                    }
                     return response()->json()->setStatusCode(204);
                 }
             }
 
             throw new GeneralException(['product_id' => ['No Product In Cart']]);
-        } catch (GeneralException $e) {
-            return $e->render();
-        } catch (Exception $e) {
-            Log::debug($e);
-            return response()->json(["error" => [$e->getMessage()]], 500);
-        }
-    }
-
-    /**
-     * @OA\Delete(
-     *  path="/api/carts/{id}",
-     *  summary="Delete a Cart Item",
-     *  description="Delete a Cart Item",
-     *  operationId="CartDelete",
-     *  tags={"Cart"},
-     *  security={{"bearerAuth": {}}},
-     *  @OA\Parameter(
-     *     name="id",
-     *     description="Cart id",
-     *     required=true,
-     *     in="path",
-     *     @OA\Schema(
-     *         type="integer"
-     *     )
-     *  ),
-     *  @OA\Response(
-     *    response=204,
-     *    description="Success",
-     *  ),
-     *  @OA\Response(
-     *    response=500,
-     *    description="Server Error",
-     *    @OA\JsonContent(
-     *      @OA\Property(property="error")
-     *    )
-     *  ),
-     *  @OA\Response(
-     *    response=401,
-     *    description="Unauthorized",
-     *  ),
-     *  @OA\Response(
-     *    response=422,
-     *    description="Wrong input response",
-     *    @OA\JsonContent(
-     *      @OA\Property(property="message", type="string", example=""),
-     *      @OA\Property(property="errors", type="object",
-     *         @OA\Property(property="dynamic-error-keys", type="array",
-     *           @OA\Items(type="string")
-     *         )
-     *       )
-     *    )
-     *  ),
-     * )
-     */
-    public function destroy(Request $request, $id)
-    {
-        try {
-            $Cart = null;
-            if ($request->customer_id) {
-                $Cart = Cart::where('id', $id)->where('customer_id', $request->customer_id)->whereNull('order_id')->first();
-            }
-
-            if ($request->guest_id) {
-                $Cart = Cart::where('id', $id)->where('guest_id', $request->guest_id)->whereNull('order_id')->first();
-            }
-
-            if ($Cart) {
-                $Cart->delete();
-                return response()->json()->setStatusCode(204);
-            } else {
-                throw new GeneralException(['id' => ['Wrong Cart Id']]);
-            }
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {

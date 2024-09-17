@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -43,6 +44,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         type="double"
  *     ),
  *     @OA\Property(
+ *         property="quantity_in_cart",
+ *         type="int"
+ *     ),
+ *     @OA\Property(
  *         property="shipping_terms",
  *         type="string"
  *     ),
@@ -67,6 +72,19 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $quantity_in_cart = 0;
+        if($request->customer_id){
+            $Cart = Cart::where('product_id', $this->id)->where('customer_id', $request->customer_id)->whereNull('order_id')->first();
+            if($Cart){
+                $quantity_in_cart = $Cart->quantity;
+            }
+        }
+        if($request->guest_id){
+            $Cart = Cart::where('product_id', $this->id)->where('guest_id', $request->guest_id)->whereNull('order_id')->first();
+            if($Cart){
+                $quantity_in_cart = $Cart->quantity;
+            }
+        }
         return [
             'id' => $this->id,
             'category_id' => $this->category_id,
@@ -76,6 +94,7 @@ class ProductResource extends JsonResource
             'image' => strpos($this->image, 'http') === 0? $this->image : url('storage/' . $this->image),
             'price' => $this->price .' $',
             'stock' => $this->stock,
+            'quantity_in_cart' => $quantity_in_cart,
             'shipping_terms' => __('terms_and_conditions.shipping'),
             'product_reviews' => ProductReviewsResource::collection($this->productReviews),
             'product_images' => ProductImagesResource::collection($this->productImages),
