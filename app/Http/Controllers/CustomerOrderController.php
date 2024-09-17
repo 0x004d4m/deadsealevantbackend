@@ -32,7 +32,7 @@ class CustomerOrderController extends Controller
      *      @OA\Property(
      *        property="data",
      *        type="array",
-     *        @OA\Items(ref="#/components/schemas/CustomerOrderResource")
+     *        @OA\Items(ref="#/components/schemas/OrderResource")
      *      ),
      *      @OA\Property(
      *        property="links",

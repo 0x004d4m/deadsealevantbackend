@@ -1243,7 +1243,12 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {},
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OrderResource"
+                                            }
+                                        },
                                         "links": {
                                             "properties": {
                                                 "first": {
@@ -2482,6 +2487,72 @@
                     },
                     "default": {
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "OrderResource": {
+                "title": "Order Resource",
+                "description": "Resource of the Order object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "guest_id": {
+                        "type": "integer"
+                    },
+                    "customer_id": {
+                        "type": "integer"
+                    },
+                    "customer_address_id": {
+                        "type": "integer"
+                    },
+                    "customer_address": {
+                        "$ref": "#/components/schemas/AddressResource"
+                    },
+                    "order_status_id": {
+                        "type": "integer"
+                    },
+                    "order_status": {
+                        "$ref": "#/components/schemas/CategoryResource"
+                    },
+                    "subtotal": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "tax": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "shipping": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "total": {
+                        "type": "number",
+                        "format": "double"
+                    },
+                    "cart_items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "OrderStatusResource": {
+                "title": "Order Status Resource",
+                "description": "Resource of the Order Status object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "color": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
