@@ -11,4 +11,5 @@ return [
     'back_button' => 'العودة إلى التسوق',
     'free_after' => 'مجاني على',
     'free' => 'مجانا',
+    'currency' => '$',
 ];

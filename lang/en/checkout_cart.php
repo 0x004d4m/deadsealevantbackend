@@ -11,4 +11,5 @@ return [
     'back_button' => 'Back to shopping',
     'free_after' => 'free standerd over',
     'free' => 'free',
+    'currency' => '$',
 ];
