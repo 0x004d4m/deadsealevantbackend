@@ -36,7 +36,7 @@ class SettingResource extends JsonResource
         return [
             'tax' => $this->tax . '%',
             'shipping' => $this->shipping . '$',
-            'shipping_free_after' => __('checkout_cart.free_after').$this->shipping_free_after . '$',
+            'shipping_free_after' => $this->shipping_free_after . '$',
         ];
     }
 }

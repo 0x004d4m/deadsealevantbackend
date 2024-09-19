@@ -9,5 +9,6 @@ return [
     'price' => 'Price',
     'button' => 'Proceed to checkout',
     'back_button' => 'Back to shopping',
-    'free_after' => 'free standerd over ',
+    'free_after' => 'free standerd over',
+    'free' => 'free',
 ];
