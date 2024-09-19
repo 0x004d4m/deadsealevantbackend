@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
-use App\Http\Requests\Customer\{ForgetOtpRequest, ForgetRequest, LoginRequest, ProfileRequest, RegisterOtpRequest, RegisterRequest, ResetPasswordRequest};
+use App\Http\Requests\Customer\{ChangePasswordRequest, ForgetOtpRequest, ForgetRequest, LoginRequest, ProfileRequest, RegisterOtpRequest, RegisterRequest, ResetPasswordRequest};
 use App\Http\Resources\Customer\{ForgetOtpResource, ForgetResource, CustomerResource, RegisterResource};
 use App\Mail\{ForgetMail, RegisterMail};
 use App\Models\Customer;
@@ -395,7 +395,6 @@ class CustomerAuthController extends Controller
     public function resetPassword(ResetPasswordRequest $resetPasswordRequest)
     {
         try {
-            Log::debug('hi');
             $Customer = Customer::where('forget_token', $resetPasswordRequest->token)->first();
 
             $Customer->update([
@@ -462,6 +461,64 @@ class CustomerAuthController extends Controller
                 'first_name' => $profileRequest->first_name,
                 'last_name' => $profileRequest->last_name,
             ]);
+            return response()->json()->setStatusCode(204);
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
+    }
+
+
+    /**
+     * @OA\Post(
+     *  path="/api/customers/change_password",
+     *  summary="Customer Change Password",
+     *  description="Customer Change Password",
+     *  operationId="CustomerAuthChangePassword",
+     *  tags={"CustomerAuth"},
+     *  @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(ref="#/components/schemas/ChangePasswordRequest")
+     *  ),
+     *  @OA\Response(
+     *    response=204,
+     *    description="success",
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function changePassword(ChangePasswordRequest $changePasswordRequest)
+    {
+        try {
+            $Customer = Customer::where('id', $changePasswordRequest->customer_id)->first();
+
+            if(Hash::check($changePasswordRequest->current_password, $Customer->password)){
+                $Customer->update([
+                    'password' => Hash::make($changePasswordRequest->new_password),
+                ]);
+            }
+
+
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
             return $e->render();

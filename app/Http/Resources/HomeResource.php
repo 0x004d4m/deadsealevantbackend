@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Schema(
@@ -34,11 +35,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     property="setting",
  *     ref="#/components/schemas/SettingResource"
  *   ),
+ *   @OA\Property(
+ *     property="countries",
+ *     type="array",
+ *     @OA\Items(ref="#/components/schemas/CountryResource")
+ *   ),
  * )
  */
 class HomeResource extends JsonResource
 {
-    public function __construct($languageFiles, $images, $categories, $availability, $setting)
+    public function __construct($languageFiles, $images, $categories, $availability, $setting, $countries)
     {
         parent::__construct([
             'translations' => $languageFiles,
@@ -46,6 +52,7 @@ class HomeResource extends JsonResource
             'categories' => $categories,
             'availability' => $availability,
             'setting' => $setting,
+            'countries' => $countries,
         ]);
     }
     /**
@@ -55,12 +62,14 @@ class HomeResource extends JsonResource
      */
     public function toArray($request): array
     {
+        Log::debug($this->resource['countries']);
         return [
             'translations' => $this->resource['translations'],
             'images' => ImageResource::collection($this->resource['images']),
             'categories' => CategoryResource::collection($this->resource['categories']),
             'availability' => AvailabilityResource::collection($this->resource['availability']),
             'setting' => new SettingResource($this->resource['setting']),
+            'countries' => CountryResource::collection($this->resource['countries']),
         ];
     }
 }

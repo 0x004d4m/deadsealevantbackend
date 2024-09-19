@@ -20,25 +20,25 @@ use Illuminate\Support\Facades\Log;
  */
 class OrderController extends Controller
 {
-    private function createPayment(){
+    private function createPayment($amount, $cart_id, $order_id){
         $response = Http::withHeaders([
-            'authorization' => 'Your profile server key',
+            'authorization' => env('MEPS_SERVER_KEY'),
             'content-type' => 'application/json',
         ])->post('https://secure-jordan.paytabs.com/payment/request', [
-            'profile_id' => 'Your profile ID',
+            'profile_id' => env('MEPS_MERCHANT_PROFILE_ID'),
             'tran_type' => 'sale',
             'tran_class' => 'ecom',
             'cart_id' => '4244b9fd-c7e9-4f16-8d3c-4fe7bf6c48ca',
-            'cart_description' => 'Dummy Order 35925502061445345',
-            'cart_currency' => 'AED',
-            'cart_amount' => 46.17,
-            'callback' => 'https://yourdomain.com/yourcallback',
-            'return' => 'https://yourdomain.com/yourpage'
+            'cart_description' => 'Order # ' . $order_id,
+            'cart_currency' => 'USD',
+            'cart_amount' => $amount,
+            'callback' => url(''),
+            'return' => env('SITE_URL'). '/payment_return'
         ]);
 
         // Check for successful response
         if ($response->successful()) {
-            return $response->json(); // Handle the response data as needed
+            return $response->json();
         } else {
             return response()->json(['error' => 'Payment request failed'], 500);
         }

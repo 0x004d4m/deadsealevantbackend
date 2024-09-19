@@ -10,6 +10,7 @@ use App\Http\Resources\HomeResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\ContactRequest;
+use App\Models\Country;
 use App\Models\Email;
 use App\Models\Image;
 use App\Models\Product;
@@ -82,11 +83,12 @@ class HomeController extends Controller
         }
         $images = Image::all();
         $categories = Category::all();
+        $countries = Country::all();
         $availability = [
             ['id' => 'true', 'name' => __('products.in_stock')], ['id' => 'false', 'name' => __('products.out_of_stock')]
         ];
         $setting = Setting::first();
-        return new HomeResource($languageFiles, $images, $categories, $availability, $setting);
+        return new HomeResource($languageFiles, $images, $categories, $availability, $setting, $countries);
     }
 
     /**

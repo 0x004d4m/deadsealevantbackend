@@ -1157,6 +1157,71 @@
                 ]
             }
         },
+        "/api/customers/change_password": {
+            "post": {
+                "tags": [
+                    "CustomerAuth"
+                ],
+                "summary": "Customer Change Password",
+                "description": "Customer Change Password",
+                "operationId": "CustomerAuthChangePassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "success"
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "dynamic-error-keys": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/customers/orders": {
             "get": {
                 "tags": [
@@ -1957,6 +2022,27 @@
                 },
                 "type": "object"
             },
+            "ChangePasswordRequest": {
+                "title": "Change Password Request",
+                "description": "Request body for Change Password Request",
+                "required": [
+                    "current_password",
+                    "new_password",
+                    "new_password_confirmation"
+                ],
+                "properties": {
+                    "current_password": {
+                        "type": "string"
+                    },
+                    "new_password": {
+                        "type": "string"
+                    },
+                    "new_password_confirmation": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "ForgetOtpRequest": {
                 "title": "Forget Otp Request",
                 "description": "Request body for Forget Otp Request",
@@ -2356,6 +2442,12 @@
                     },
                     "setting": {
                         "$ref": "#/components/schemas/SettingResource"
+                    },
+                    "countries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CountryResource"
+                        }
                     }
                 },
                 "type": "object"
