@@ -97,13 +97,13 @@ class CartController extends Controller
     {
         try {
             if ($request->customer_id) {
-                if (Cart::where('customer_id', $request->customer_id)->whereNull('order_id')->count() == 0) {
+                if (Cart::where('customer_id', $request->customer_id)->whereNull('order_id')->count() > 0) {
                     return CartResource::collection(Cart::where('customer_id', $request->customer_id)->whereNull('order_id')->get());
                 }
             }
 
             if ($request->guest_id) {
-                if (Cart::where('guest_id', $request->guest_id)->whereNull('order_id')->count() == 0) {
+                if (Cart::where('guest_id', $request->guest_id)->whereNull('order_id')->count() > 0) {
                     return CartResource::collection(Cart::where('guest_id', $request->guest_id)->whereNull('order_id')->get());
                 }
             }
