@@ -178,10 +178,12 @@ class CartController extends Controller
                 } else {
                     if($cartRequest->quantity == 0){
                         $Cart->delete();
+                        return response()->json()->setStatusCode(204);
                     }else{
                         $Cart->update([
                             'quantity' => $cartRequest->quantity,
                         ]);
+                        return response()->json()->setStatusCode(204);
                     }
                 }
             }
@@ -198,10 +200,12 @@ class CartController extends Controller
                 } else {
                     if ($cartRequest->quantity == 0) {
                         $Cart->delete();
+                        return response()->json()->setStatusCode(204);
                     } else {
                         $Cart->update([
                             'quantity' => $cartRequest->quantity,
                         ]);
+                        return response()->json()->setStatusCode(204);
                     }
                 }
             }
