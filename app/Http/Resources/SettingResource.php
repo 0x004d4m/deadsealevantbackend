@@ -34,9 +34,9 @@ class SettingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'tax' => $this->tax,
-            'shipping' => $this->shipping,
-            'shipping_free_after' => $this->shipping_free_after,
+            'tax' => $this->tax . '%',
+            'shipping' => $this->shipping . '$',
+            'shipping_free_after' => $this->shipping_free_after . '$',
         ];
     }
 }
