@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Setting;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -19,6 +20,29 @@ use Illuminate\Support\Facades\Log;
  */
 class OrderController extends Controller
 {
+    private function createPayment(){
+        $response = Http::withHeaders([
+            'authorization' => 'Your profile server key',
+            'content-type' => 'application/json',
+        ])->post('https://secure-jordan.paytabs.com/payment/request', [
+            'profile_id' => 'Your profile ID',
+            'tran_type' => 'sale',
+            'tran_class' => 'ecom',
+            'cart_id' => '4244b9fd-c7e9-4f16-8d3c-4fe7bf6c48ca',
+            'cart_description' => 'Dummy Order 35925502061445345',
+            'cart_currency' => 'AED',
+            'cart_amount' => 46.17,
+            'callback' => 'https://yourdomain.com/yourcallback',
+            'return' => 'https://yourdomain.com/yourpage'
+        ]);
+
+        // Check for successful response
+        if ($response->successful()) {
+            return $response->json(); // Handle the response data as needed
+        } else {
+            return response()->json(['error' => 'Payment request failed'], 500);
+        }
+    }
     /**
      * @OA\Post(
      *  path="/api/orders",

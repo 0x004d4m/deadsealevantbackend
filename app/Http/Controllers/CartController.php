@@ -120,9 +120,9 @@ class CartController extends Controller
     /**
      * @OA\Post(
      *  path="/api/carts",
-     *  summary="Add Item To Cart",
-     *  description="Add Item To Cart",
-     *  operationId="CartCreate",
+     *  summary="Add Item To Cart Or Alter Item In Cart",
+     *  description="Alter Cart",
+     *  operationId="CartCreateOrAlter",
      *  tags={"Cart"},
      *  security={{"bearerAuth": {}}},
      *  @OA\RequestBody(
@@ -167,7 +167,8 @@ class CartController extends Controller
     {
         try {
             if ($cartRequest->customer_id) {
-                if (Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->count() == 0) {
+                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->first();
+                if (!$Cart) {
                     Cart::create([
                         'quantity' => $cartRequest->quantity,
                         'product_id' => $cartRequest->product_id,
@@ -175,12 +176,19 @@ class CartController extends Controller
                     ]);
                     return response()->json()->setStatusCode(204);
                 } else {
-                    throw new GeneralException(['product_id' => ['Product already added in cart']]);
+                    if($cartRequest->quantity == 0){
+                        $Cart->delete();
+                    }else{
+                        $Cart->update([
+                            'quantity' => $cartRequest->quantity,
+                        ]);
+                    }
                 }
             }
 
             if ($cartRequest->guest_id) {
-                if (Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->count() == 0) {
+                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->first();
+                if (!$Cart) {
                     Cart::create([
                         'quantity' => $cartRequest->quantity,
                         'product_id' => $cartRequest->product_id,
@@ -188,7 +196,13 @@ class CartController extends Controller
                     ]);
                     return response()->json()->setStatusCode(204);
                 } else {
-                    throw new GeneralException(['product_id' => ['Product already added in cart']]);
+                    if ($cartRequest->quantity == 0) {
+                        $Cart->delete();
+                    } else {
+                        $Cart->update([
+                            'quantity' => $cartRequest->quantity,
+                        ]);
+                    }
                 }
             }
 
@@ -201,87 +215,6 @@ class CartController extends Controller
                 'guest_id' => $Guest->id,
             ]);
             return new RegisterResource($Guest);
-        } catch (GeneralException $e) {
-            return $e->render();
-        } catch (Exception $e) {
-            Log::debug($e);
-            return response()->json(["error" => [$e->getMessage()]], 500);
-        }
-    }
-
-    /**
-     * @OA\Put(
-     *  path="/api/carts",
-     *  summary="Update Cart Item Quantity",
-     *  description="Update Cart Item Quantity",
-     *  operationId="CartUpdate",
-     *  tags={"Cart"},
-     *  security={{"bearerAuth": {}}},
-     *  @OA\RequestBody(
-     *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/CartRequest")
-     *  ),
-     *  @OA\Response(
-     *    response=204,
-     *    description="Success",
-     *  ),
-     *  @OA\Response(
-     *    response=500,
-     *    description="Server Error",
-     *    @OA\JsonContent(
-     *      @OA\Property(property="error")
-     *    )
-     *  ),
-     *  @OA\Response(
-     *    response=401,
-     *    description="Unauthorized",
-     *  ),
-     *  @OA\Response(
-     *    response=422,
-     *    description="Wrong input response",
-     *    @OA\JsonContent(
-     *      @OA\Property(property="message", type="string", example=""),
-     *      @OA\Property(property="errors", type="object",
-     *        @OA\Property(property="dynamic-error-keys", type="array",
-     *          @OA\Items(type="string")
-     *        )
-     *      )
-     *    )
-     *  )
-     * )
-     */
-    public function update(CartRequest $cartRequest)
-    {
-        try {
-            if ($cartRequest->customer_id) {
-                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('customer_id', $cartRequest->customer_id)->whereNull('order_id')->first();
-                if ($Cart) {
-                    if($cartRequest->quantity == 0){
-                        $Cart->delete();
-                    }else{
-                        $Cart->update([
-                            'quantity' => $cartRequest->quantity,
-                        ]);
-                    }
-                    return response()->json()->setStatusCode(204);
-                }
-            }
-
-            if ($cartRequest->guest_id) {
-                $Cart = Cart::where('product_id', $cartRequest->product_id)->where('guest_id', $cartRequest->guest_id)->whereNull('order_id')->first();
-                if ($Cart) {
-                    if ($cartRequest->quantity == 0) {
-                        $Cart->delete();
-                    } else {
-                        $Cart->update([
-                            'quantity' => $cartRequest->quantity,
-                        ]);
-                    }
-                    return response()->json()->setStatusCode(204);
-                }
-            }
-
-            throw new GeneralException(['product_id' => ['No Product In Cart']]);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
