@@ -190,12 +190,6 @@ class OrderController extends Controller
             'content-type' => 'application/json'
         ])->post('https://secure-jordan.paytabs.com/payment/request', $paymentData);
 
-        Log::debug("env('MEPS_SERVER_KEY')");
-        Log::debug(env('MEPS_SERVER_KEY'));
-        Log::debug('$response');
-        Log::debug($response);
-        Log::debug('$paymentData');
-        Log::debug($paymentData);
         if ($response->successful()) {
             $result = $response->json();
             if (isset($result['redirect_url'])) {
