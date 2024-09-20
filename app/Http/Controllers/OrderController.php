@@ -160,10 +160,11 @@ class OrderController extends Controller
     private function generatePaymentReference()
     {
         $prefix = 'PMNT';
-        $timestampHex = strtoupper(dechex(time()));
-        $randomHexPart = strtoupper(bin2hex(random_bytes(4)));
-        $randomHexPart2 = sprintf('%08X', random_int(0, 4294967295));
-        $reference = $prefix . $timestampHex . '.' . $randomHexPart . '.' . $randomHexPart2;
+        $timePart1 = strtoupper(str_pad(dechex(date('Hi')), 4, '0', STR_PAD_LEFT));
+        $milliseconds = (int) (microtime(true) * 1000);
+        $timePart2 = strtoupper(substr(dechex($milliseconds), -8));
+        $randomHexPart = sprintf('%08X', random_int(0, 4294967295));
+        $reference = $prefix . $timePart1 . '.' . $timePart2 . '.' . $randomHexPart;
         return $reference;
     }
 
@@ -178,10 +179,10 @@ class OrderController extends Controller
             "tran_class" => "ecom",
             "cart_id" => $Order->payment_id,
             "cart_description" => "Order #{$Order->id}",
-            "cart_currency" => "AED",
+            "cart_currency" => "JOD",
             "cart_amount" => $Order->total,
             "callback" => route('payment.callback'),
-            "return" => env('SITE_URL') . 'paymentReturn'
+            "return" => env('SITE_URL') . '/paymentReturn'
         ];
 
         $response = Http::withHeaders([
