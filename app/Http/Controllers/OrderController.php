@@ -209,7 +209,8 @@ class OrderController extends Controller
         ksort($data);
         // $query = http_build_query($data);
         // $generatedSignature = hash_hmac('sha256', $query, $serverKey);
-        print_r($data);
+        Log::debug($request->header('signature'));
+        Log::debug($data);
         // if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
             $order = Order::find('payment_id',$data['cartId']);
 
