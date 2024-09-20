@@ -203,39 +203,35 @@ class OrderController extends Controller
     public function paymentCallback(Request $request)
     {
         $data = $request->all();
-        // $serverKey = env('MEPS_SERVER_KEY');
-        // $requestSignature = $data['signature'] ?? null;
-        // unset($data['signature']);
-        ksort($data);
-        // $query = http_build_query($data);
-        // $generatedSignature = hash_hmac('sha256', $query, $serverKey);
-        Log::debug($request->header('signature'));
-        Log::debug($data);
-        // if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
-            $order = Order::find('payment_id',$data['cartId']);
+        $serverKey = env('MEPS_SERVER_KEY');
+        $requestSignature = $request->header('signature');
+        $query = http_build_query($data);
+        $generatedSignature = hash_hmac('sha256', $query, $serverKey);
+        if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
+            $order = Order::find('payment_id',$data['cart_id']);
 
             if ($order) {
-                if ($data['respStatus'] === 'A') {
+                if ($data['payment_result']['response_status'] === 'A') {
                     $order->update([
                         'order_status_id' => 2,
-                        'transaction_reference' => $data['tranRef'],
-                        'response_message' => $data['respMessage'],
+                        'transaction_reference' => $data['tran_ref'],
+                        'response_message' => $data['payment_result']['response_message'],
                     ]);
                     Log::info('Order #' . $order->id . ' payment successful.');
                 } else {
                     $order->update([
                         'order_status_id' => 3,
-                        'transaction_reference' => $data['tranRef'],
-                        'response_message' => $data['respMessage'],
+                        'transaction_reference' => $data['tran_ref'],
+                        'response_message' => $data['payment_result']['response_message'],
                     ]);
                     Log::error('Order #' . $order->id . ' payment failed.');
                 }
                 return response()->json(['status' => 'success'], 200);
             }
-            Log::error('Order not found for cartId: ' . $data['cartId']);
+            Log::error('Order not found for cartId: ' . $data['cart_id']);
             return response()->json(['status' => 'error', 'message' => 'Order not found'], 404);
-        // }
-        // Log::error('Invalid signature in payment callback.');
-        // return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
+        }
+        Log::error('Invalid signature in payment callback.');
+        return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
     }
 }
