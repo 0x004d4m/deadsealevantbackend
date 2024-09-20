@@ -114,6 +114,7 @@ class OrderController extends Controller
 
         $orderData = [
             "{$type}_id" => $request->customer_id ?? $request->guest_id,
+            'payment_id' => $this->generatePaymentReference(),
             'order_status_id' => 1,
             'subtotal' => $subtotal,
             'tax' => $tax,
@@ -156,6 +157,16 @@ class OrderController extends Controller
         ]);
     }
 
+    private function generatePaymentReference()
+    {
+        $prefix = 'PMNT';
+        $timestampHex = strtoupper(dechex(time()));
+        $randomHexPart = strtoupper(bin2hex(random_bytes(4)));
+        $randomHexPart2 = sprintf('%08X', random_int(0, 4294967295));
+        $reference = $prefix . $timestampHex . '.' . $randomHexPart . '.' . $randomHexPart2;
+        return $reference;
+    }
+
     /**
      * Initiate payment request to MEPS and redirect user to hosted payment page.
      */
@@ -165,7 +176,7 @@ class OrderController extends Controller
             "profile_id" => env('MEPS_PROFILE_ID'),
             "tran_type" => "sale",
             "tran_class" => "ecom",
-            "cart_id" => $Order->id,
+            "cart_id" => $Order->payment_id,
             "cart_description" => "Order #{$Order->id}",
             "cart_currency" => "AED",
             "cart_amount" => $Order->total,
@@ -205,7 +216,7 @@ class OrderController extends Controller
         $generatedSignature = hash_hmac('sha256', $query, $serverKey);
 
         if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
-            $order = Order::find($data['cartId']);
+            $order = Order::find('payment_id',$data['cartId']);
 
             if ($order) {
                 if ($data['respStatus'] === 'A') {
