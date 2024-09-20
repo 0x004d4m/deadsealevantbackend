@@ -19,6 +19,8 @@ class Order extends Model
         'tax',
         'shipping',
         'total',
+        'transaction_reference',
+        'response_message',
     ];
 
     public function guest()

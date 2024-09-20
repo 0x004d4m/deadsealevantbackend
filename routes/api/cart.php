@@ -16,5 +16,6 @@ Route::middleware(GuestAuth::class)->group(function () {
 Route::middleware(CustomerAuth::class)->group(function () {
     Route::prefix('orders')->group(function () {
         Route::post('/', [OrderController::class, 'store']);
+        Route::post('/paymentCallback', [OrderController::class, 'paymentCallback'])->name('payment.callback');
     });
 });

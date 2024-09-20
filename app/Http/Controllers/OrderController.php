@@ -20,29 +20,6 @@ use Illuminate\Support\Facades\Log;
  */
 class OrderController extends Controller
 {
-    private function createPayment($amount, $cart_id, $order_id){
-        $response = Http::withHeaders([
-            'authorization' => env('MEPS_SERVER_KEY'),
-            'content-type' => 'application/json',
-        ])->post('https://secure-jordan.paytabs.com/payment/request', [
-            'profile_id' => env('MEPS_MERCHANT_PROFILE_ID'),
-            'tran_type' => 'sale',
-            'tran_class' => 'ecom',
-            'cart_id' => '4244b9fd-c7e9-4f16-8d3c-4fe7bf6c48ca',
-            'cart_description' => 'Order # ' . $order_id,
-            'cart_currency' => 'USD',
-            'cart_amount' => $amount,
-            'callback' => url(''),
-            'return' => env('SITE_URL'). '/payment_return'
-        ]);
-
-        // Check for successful response
-        if ($response->successful()) {
-            return $response->json();
-        } else {
-            return response()->json(['error' => 'Payment request failed'], 500);
-        }
-    }
     /**
      * @OA\Post(
      *  path="/api/orders",
@@ -56,8 +33,9 @@ class OrderController extends Controller
      *    @OA\JsonContent(ref="#/components/schemas/OrderRequest")
      *  ),
      *  @OA\Response(
-     *    response=204,
+     *    response=200,
      *    description="Success",
+     *    @OA\Property(property="redirect_url", type="string"),
      *  ),
      *  @OA\Response(
      *    response=401,
@@ -88,66 +66,18 @@ class OrderController extends Controller
     {
         try {
             if ($orderRequest->customer_id) {
-                $subtotal = 0;
-                foreach (Cart::where('customer_id', $orderRequest->customer_id)->whereNull('order_id')->get() as $Cart) {
-                    $subtotal += ($Cart->product->price * $Cart->quantity);
-                }
-                $Setting = Setting::first();
-                $tax = $Setting->tax;
-                $shipping = ($subtotal > $Setting->shipping_free_after) ? 0 : $Setting->shipping;
-                $subtotalTax = $subtotal * $Setting->tax;
-                $Order = Order::create([
-                    'customer_id' => $orderRequest->customer_id,
-                    'customer_address_id' => $orderRequest->customer_address_id,
-                    'order_status_id' => 1,
-                    'subtotal' => $subtotal,
-                    'tax' => $tax,
-                    'shipping' => $shipping,
-                    'total' => ($subtotal + $shipping + $subtotalTax),
-                ]);
-                foreach (Cart::where('customer_id', $orderRequest->customer_id)->whereNull('order_id')->get() as $Cart) {
-                    $Cart->update([
-                        'order_id' => $Order->id
-                    ]);
-                }
-                return response()->json()->setStatusCode(204);
+                $subtotal = $this->calculateSubtotal($orderRequest->customer_id, 'customer');
+                $Order = $this->createOrder($orderRequest, $subtotal, 'customer');
+                $this->attachCartsToOrder($orderRequest->customer_id, $Order->id, 'customer');
+                return $this->initiatePayment($Order);
             }
 
             if ($orderRequest->guest_id) {
-                $Guest = Guest::where('id', $orderRequest->guest_id)->first();
-                $subtotal = 0;
-                foreach (Cart::where('guest_id', $orderRequest->guest_id)->whereNull('order_id')->get() as $Cart) {
-                    $subtotal += ($Cart->product->price * $Cart->quantity);
-                }
-                $Setting = Setting::first();
-                $tax = $Setting->tax;
-                $shipping = ($subtotal > $Setting->shipping_free_after) ? 0 : $Setting->shipping;
-                $subtotalTax = $subtotal * $Setting->tax;
-                $Order = Order::create([
-                    'guest_id' => $orderRequest->guest_id,
-                    'order_status_id' => 1,
-                    'subtotal' => $subtotal,
-                    'tax' => $tax,
-                    'shipping' => $shipping,
-                    'total' => ($subtotal + $shipping + $subtotalTax),
-                ]);
-                foreach (Cart::where('guest_id', $orderRequest->guest_id)->whereNull('order_id')->get() as $Cart) {
-                    $Cart->update([
-                        'order_id' => $Order->id
-                    ]);
-                }
-                $Guest->update([
-                    'first_name' => $orderRequest->first_name,
-                    'last_name' => $orderRequest->last_name,
-                    'country_id' => $orderRequest->country_id,
-                    'phone_number' => $orderRequest->phone_number,
-                    'address' => $orderRequest->address,
-                    'address_details' => $orderRequest->address_details,
-                    'city' => $orderRequest->city,
-                    'state' => $orderRequest->state,
-                    'zip_code' => $orderRequest->zip_code,
-                ]);
-                return response()->json()->setStatusCode(204);
+                $subtotal = $this->calculateSubtotal($orderRequest->guest_id, 'guest');
+                $Order = $this->createOrder($orderRequest, $subtotal, 'guest');
+                $this->attachCartsToOrder($orderRequest->guest_id, $Order->id, 'guest');
+                $this->updateGuestDetails($orderRequest);
+                return $this->initiatePayment($Order);
             }
         } catch (GeneralException $e) {
             return $e->render();
@@ -155,5 +85,144 @@ class OrderController extends Controller
             Log::debug($e);
             return response()->json(["error" => [$e->getMessage()]], 500);
         }
+    }
+
+    /**
+     * Calculate the subtotal for the order.
+     */
+    private function calculateSubtotal($id, $type)
+    {
+        $subtotal = 0;
+        $carts = Cart::where($type . '_id', $id)->whereNull('order_id')->get();
+
+        foreach ($carts as $Cart) {
+            $subtotal += ($Cart->product->price * $Cart->quantity);
+        }
+
+        return $subtotal;
+    }
+
+    /**
+     * Create the order and calculate taxes and shipping.
+     */
+    private function createOrder($request, $subtotal, $type)
+    {
+        $Setting = Setting::first();
+        $tax = $Setting->tax;
+        $shipping = ($subtotal > $Setting->shipping_free_after) ? 0 : $Setting->shipping;
+        $subtotalTax = $subtotal * $Setting->tax;
+
+        $orderData = [
+            "{$type}_id" => $request->customer_id ?? $request->guest_id,
+            'order_status_id' => 1,
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'shipping' => $shipping,
+            'total' => ($subtotal + $shipping + $subtotalTax),
+        ];
+
+        if ($type === 'customer') {
+            $orderData['customer_address_id'] = $request->customer_address_id;
+        }
+
+        return Order::create($orderData);
+    }
+
+    /**
+     * Attach carts to the created order.
+     */
+    private function attachCartsToOrder($id, $orderId, $type)
+    {
+        Cart::where($type . '_id', $id)
+            ->whereNull('order_id')
+            ->update(['order_id' => $orderId]);
+    }
+
+    /**
+     * Update guest details.
+     */
+    private function updateGuestDetails($request)
+    {
+        Guest::where('id', $request->guest_id)->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'country_id' => $request->country_id,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'address_details' => $request->address_details,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip_code' => $request->zip_code,
+        ]);
+    }
+
+    /**
+     * Initiate payment request to MEPS and redirect user to hosted payment page.
+     */
+    private function initiatePayment($Order)
+    {
+        $paymentData = [
+            "profile_id" => env('MEPS_PROFILE_ID'),
+            "tran_type" => "sale",
+            "tran_class" => "ecom",
+            "cart_id" => $Order->id,
+            "cart_description" => "Order #{$Order->id}",
+            "cart_currency" => "AED",
+            "cart_amount" => $Order->total,
+            "callback" => route('payment.callback'),
+            "return" => env('SITE_URL') . 'paymentReturn'
+        ];
+
+        $response = Http::withHeaders([
+            'authorization' => env('MEPS_SERVER_KEY'),
+            'content-type' => 'application/json'
+        ])->post('https://secure-jordan.paytabs.com/payment/request', $paymentData);
+
+        if ($response->successful()) {
+            $result = $response->json();
+            if (isset($result['redirect_url'])) {
+                return response()->json(['redirect_url' => $result['redirect_url']]);
+            }
+        }
+
+        throw new GeneralException(['order_id' => ['An unexpected error occurred']]);
+    }
+
+    public function paymentCallback(Request $request)
+    {
+        $data = $request->all();
+        $serverKey = env('MEPS_SERVER_KEY');
+        $requestSignature = $data['signature'] ?? null;
+        unset($data['signature']);
+        ksort($data);
+        $query = http_build_query($data);
+        $generatedSignature = hash_hmac('sha256', $query, $serverKey);
+
+        if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
+            $order = Order::find($data['cartId']);
+
+            if ($order) {
+                if ($data['respStatus'] === 'A') {
+                    $order->update([
+                        'order_status_id' => 2,
+                        'transaction_reference' => $data['tranRef'],
+                        'response_message' => $data['respMessage'],
+                    ]);
+                    Log::info('Order #' . $order->id . ' payment successful.');
+                } else {
+                    $order->update([
+                        'order_status_id' => 3,
+                        'transaction_reference' => $data['tranRef'],
+                        'response_message' => $data['respMessage'],
+                    ]);
+                    Log::error('Order #' . $order->id . ' payment failed.');
+                }
+                return response()->json(['status' => 'success'], 200);
+            }
+            Log::error('Order not found for cartId: ' . $data['cartId']);
+            return response()->json(['status' => 'error', 'message' => 'Order not found'], 404);
+        }
+        Log::error('Invalid signature in payment callback.');
+        return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
     }
 }

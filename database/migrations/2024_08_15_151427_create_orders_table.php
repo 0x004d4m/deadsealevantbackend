@@ -25,6 +25,8 @@ return new class extends Migration
             $table->double('tax')->nullable();
             $table->double('shipping')->nullable();
             $table->double('total')->nullable();
+            $table->text('transaction_reference')->nullable();
+            $table->text('response_message')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
