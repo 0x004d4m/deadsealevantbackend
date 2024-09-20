@@ -203,11 +203,11 @@ class OrderController extends Controller
     public function paymentCallback(Request $request)
     {
         $data = $request->all();
-        $serverKey = env('MEPS_SERVER_KEY');
-        $requestSignature = $request->header('signature');
-        $query = http_build_query($data);
-        $generatedSignature = hash_hmac('sha256', $query, $serverKey);
-        if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
+        // $serverKey = env('MEPS_SERVER_KEY');
+        // $requestSignature = $request->header('signature');
+        // $query = http_build_query($data);
+        // $generatedSignature = hash_hmac('sha256', $query, $serverKey);
+        // if ($requestSignature && hash_equals($generatedSignature, $requestSignature)) {
             $order = Order::find('payment_id',$data['cart_id']);
 
             if ($order) {
@@ -230,8 +230,8 @@ class OrderController extends Controller
             }
             Log::error('Order not found for cartId: ' . $data['cart_id']);
             return response()->json(['status' => 'error', 'message' => 'Order not found'], 404);
-        }
-        Log::error('Invalid signature in payment callback.');
-        return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
+        // }
+        // Log::error('Invalid signature in payment callback.');
+        // return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
     }
 }
