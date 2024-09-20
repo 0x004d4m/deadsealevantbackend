@@ -18,4 +18,5 @@ Route::middleware(CustomerAuth::class)->group(function () {
         Route::post('/', [OrderController::class, 'store']);
     });
 });
+Route::get('/orders/{id}', [OrderController::class, 'show']);
 Route::post('/orders/paymentCallback', [OrderController::class, 'paymentCallback'])->name('payment.callback');
