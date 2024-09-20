@@ -174,7 +174,7 @@ class OrderController extends Controller
     private function initiatePayment($Order)
     {
         $paymentData = [
-            "profile_id" => env('MEPS_PROFILE_ID'),
+            "profile_id" => env('MEPS_MERCHANT_PROFILE_ID'),
             "tran_type" => "sale",
             "tran_class" => "ecom",
             "cart_id" => $Order->payment_id,
