@@ -8,7 +8,7 @@ class ProductFilters extends QueryFilter
 {
     public function search($value)
     {
-        return $this->builder->where('name', 'LIKE', "%" . $value . "%")->orWhere('description', 'LIKE', "%" . $value . "%");
+        return $this->builder->where('title', 'LIKE', "%" . $value . "%")->orWhere('description', 'LIKE', "%" . $value . "%");
     }
     public function category_id($value)
     {
