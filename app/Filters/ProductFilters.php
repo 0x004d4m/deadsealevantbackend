@@ -16,7 +16,6 @@ class ProductFilters extends QueryFilter
     }
     public function availablity($value)
     {
-        Log::debug($value);
         if ($value == 'true') {
             return $this->builder->where('stock', '>', 0);
         } else {
