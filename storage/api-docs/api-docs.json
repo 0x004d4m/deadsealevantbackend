@@ -1891,7 +1891,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegisterResource"
+                                    "$ref": "#/components/schemas/MepsRedirectResource"
                                 }
                             }
                         }
