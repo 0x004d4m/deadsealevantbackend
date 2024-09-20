@@ -32,6 +32,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         ref="#/components/schemas/AddressResource"
  *     ),
  *     @OA\Property(
+ *         property="response_message",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
  *         property="order_status_id",
  *         type="int"
  *     ),
@@ -77,6 +81,7 @@ class OrderResource extends JsonResource
             'customer_id' => $this->customer_id,
             'customer_address_id' => $this->customer_address_id,
             'customer_address' => new AddressResource($this->customerAddress),
+            'response_message' => $this->response_message,
             'order_status_id' => $this->order_status_id,
             'order_status' => new OrderStatusResource($this->orderStatus),
             'subtotal' => $this->subtotal,

@@ -320,7 +320,14 @@ class HomeController extends Controller
      */
     public function product(Request $request, $id)
     {
-        return new ProductResource(Product::where('id', $id)->first());
+        try {
+            return new ProductResource(Product::where('id', $id)->first());
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
     }
 
     /**

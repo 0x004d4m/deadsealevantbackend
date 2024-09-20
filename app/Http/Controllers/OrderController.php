@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
+use App\Http\Resources\OrderResource;
 use App\Models\Cart;
 use App\Models\Guest;
 use App\Models\Order;
@@ -182,7 +183,7 @@ class OrderController extends Controller
             "cart_currency" => "JOD",
             "cart_amount" => $Order->total,
             "callback" => route('payment.callback'),
-            "return" => env('SITE_URL') . '/paymentReturn'
+            "return" => env('SITE_URL') . 'paymentReturn?order_id='. $Order->payment_id
         ];
 
         $response = Http::withHeaders([
@@ -237,5 +238,64 @@ class OrderController extends Controller
         // }
         // Log::error('Invalid signature in payment callback.');
         // return response()->json(['status' => 'error', 'message' => 'Invalid signature'], 400);
+    }
+
+    /**
+     * @OA\Get(
+     *  path="/api/orders/{id}",
+     *  summary="Get Order By Id",
+     *  description="Get Order By Id",
+     *  operationId="GetOrder",
+     *  tags={"Order"},
+     *  @OA\Parameter(
+     *     name="id",
+     *     description="Order id",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="",
+     *    @OA\JsonContent(
+     *      @OA\Property(
+     *        property="data",
+     *        ref="#/components/schemas/OrderResource"
+     *      ),
+     *    ),
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong input response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function show($id)
+    {
+        try {
+            return new OrderResource(Order::where('id', $id)->first());
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
     }
 }
