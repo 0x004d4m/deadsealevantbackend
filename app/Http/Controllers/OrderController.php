@@ -203,6 +203,10 @@ class OrderController extends Controller
     public function paymentCallback(Request $request)
     {
         $data = $request->all();
+        if (!isset($data['cart_id'])) {
+            Log::error('cartId not found in payment callback');
+            return response()->json(['status' => 'error', 'message' => 'cartId not found'], 400);
+        }
         // $serverKey = env('MEPS_SERVER_KEY');
         // $requestSignature = $request->header('signature');
         // $query = http_build_query($data);
