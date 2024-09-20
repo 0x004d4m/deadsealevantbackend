@@ -35,7 +35,7 @@ class OrderController extends Controller
      *  @OA\Response(
      *    response=200,
      *    description="Success",
-     *    @OA\JsonContent(ref="#/components/schemas/RegisterResource")
+     *    @OA\JsonContent(ref="#/components/schemas/MepsRedirectResource")
      *  ),
      *  @OA\Response(
      *    response=401,
