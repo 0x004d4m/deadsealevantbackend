@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProductRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ProductCrudController
@@ -62,13 +63,6 @@ class ProductCrudController extends CrudController
             'name'   => 'image',
             'type'   => 'image',
             'label'  => 'Image',
-            'function' => function ($entry) {
-                if (strpos($entry->image, 'http') === 0) {
-                    return $entry->image;
-                } else {
-                    return url('storage/' . $entry->image);
-                }
-            },
         ]);
     }
 
@@ -96,6 +90,14 @@ class ProductCrudController extends CrudController
             'type'   => 'upload',
             'label'  => 'Image',
             'withFiles' => true
+        ]);
+        $this->crud->addField([
+            'name' => 'product_images',
+            'label' => 'Product Images',
+            'type' => 'upload_multiple',
+            'upload' => true,
+            'disk' => 'public',
+            'hint' => 'Upload multiple images for the product.',
         ]);
     }
 

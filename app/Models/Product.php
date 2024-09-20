@@ -50,4 +50,29 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function getImageAttribute($val)  {
+        if (strpos($val, 'http') === 0) {
+            return $val;
+        } else {
+            return url('storage/' . $val);
+        }
+    }
+
+    public function setProductImagesAttribute($images)
+    {
+        $storedImages = [];
+
+        if (is_array($images)) {
+            foreach ($images as $image) {
+                if (is_object($image) && $image->isValid()) {
+                    $path = $image->store('products', 'public');
+                    $storedImages[] = $path;
+                }
+            }
+        }
+
+        // Save image paths to the database (assuming it's stored as JSON)
+        $this->attributes['product_images'] = json_encode($storedImages);
+    }
 }

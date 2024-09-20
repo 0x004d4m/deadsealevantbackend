@@ -20,6 +20,15 @@ class ProductImage extends Model
         'image',
     ];
 
+    public function getImageAttribute($val)
+    {
+        if (strpos($val, 'http') === 0) {
+            return $val;
+        } else {
+            return url('storage/' . $val);
+        }
+    }
+
     public function product(){
         return $this->belongsTo(Product::class);
     }

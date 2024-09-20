@@ -61,13 +61,6 @@ class ProductImageCrudController extends CrudController
             'name'   => 'image',
             'type'   => 'image',
             'label'  => 'Image',
-            'function' => function ($entry) {
-                if (strpos($entry->image, 'http') === 0) {
-                    return $entry->image;
-                } else {
-                    return url('storage/' . $entry->image);
-                }
-            },
         ]);
     }
 
