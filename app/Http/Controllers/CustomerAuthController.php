@@ -516,8 +516,9 @@ class CustomerAuthController extends Controller
                 $Customer->update([
                     'password' => Hash::make($changePasswordRequest->new_password),
                 ]);
+            }else {
+                throw new GeneralException(['current_password' => ['Current Password is incorrect']]);
             }
-
 
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
