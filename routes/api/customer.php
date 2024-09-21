@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomerAddressController;
 use App\Http\Controllers\CustomerAuthController;
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Middleware\CustomerAuth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,6 @@ Route::prefix('customers')->group(function(){
         Route::post('change_password', [CustomerAuthController::class, 'changePassword']);
         Route::put('profile', [CustomerAuthController::class, 'profile']);
         Route::apiResource('addresses', CustomerAddressController::class);
+        Route::get('orders', [CustomerOrderController::class, 'index']);
     });
 });
