@@ -183,7 +183,7 @@ class OrderController extends Controller
             "cart_currency" => "JOD",
             "cart_amount" => $Order->total,
             "callback" => route('payment.callback'),
-            "return" => env('SITE_URL') . 'paymentReturn?order_id='. $Order->id
+            "return" => env('SITE_URL') . '/paymentReturn?order_id='. $Order->id
         ];
 
         $response = Http::withHeaders([
