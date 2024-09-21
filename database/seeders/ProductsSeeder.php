@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsSeeder extends Seeder
@@ -20,7 +20,7 @@ class ProductsSeeder extends Seeder
         foreach ($data as $row) {
             $productId = DB::table('products')->insertGetId([
                 'category_id' => $row[4],
-                'title' => '{"en":"'. addslashes($row[1]).'"}',
+                'title' => '{"en":"' . addslashes($row[1]) . '"}',
                 'description' => '{"en":"' . addslashes($row[2]) . '"}',
                 'image' => $this->sanitizeExcelFormula($row[6]),
                 'price' => $row[3],
@@ -38,6 +38,21 @@ class ProductsSeeder extends Seeder
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
+                }
+            }
+
+            $productFolder = public_path('product_images/' . $productId);
+            if (File::exists($productFolder)) {
+                $imageFiles = File::files($productFolder);
+                foreach ($imageFiles as $file) {
+                    if ($file->getFilename() != 'Thumbs.db') {
+                        DB::table('product_images')->insert([
+                            'product_id' => $productId,
+                            'image' => url('product_images/' . $productId . '/' . $file->getFilename()),
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
                 }
             }
         }
