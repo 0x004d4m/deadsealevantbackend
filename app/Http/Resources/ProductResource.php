@@ -85,12 +85,16 @@ class ProductResource extends JsonResource
                 $quantity_in_cart = $Cart->quantity;
             }
         }
+        $description = $this->description;
+        if (isset($request->id)) {
+            $description = substr($this->description, 0, 100);
+        }
         return [
             'id' => $this->id,
             'category_id' => $this->category_id,
             'category' => new CategoryResource($this->category),
             'title' => $this->title,
-            'description' => $this->description,
+            'description' => $description,
             'image' => strpos($this->image, 'http') === 0? $this->image : url('storage/' . $this->image),
             'price' => $this->price .' $',
             'stock' => $this->stock,
