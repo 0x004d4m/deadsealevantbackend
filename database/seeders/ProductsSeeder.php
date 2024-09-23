@@ -75,9 +75,9 @@ class ProductsSeeder extends Seeder
 
             // Download and store additional images from Excel URLs in excel_product_images/{productId}
             $additionalImagesUrls = !empty($row[7]) ? explode(',', $this->sanitizeExcelFormula($row[7])) : [];
-            foreach ($additionalImagesUrls as $imageUrl) {
-                $this->downloadImage(trim($imageUrl), $excelProductFolder); // Download all additional images from Excel
-            }
+            // foreach ($additionalImagesUrls as $imageUrl) {
+            //     $this->downloadImage(trim($imageUrl), $excelProductFolder); // Download all additional images from Excel
+            // }
 
             // Check if additional images exist in the product folder
             $additionalImagesFromFolder = $this->getAdditionalImagesFromFolder($productFolder);
