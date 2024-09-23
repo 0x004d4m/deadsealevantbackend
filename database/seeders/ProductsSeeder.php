@@ -60,9 +60,9 @@ class ProductsSeeder extends Seeder
             }
 
             // Additional Images Handling: Check product folder first, then fallback to Excel folder
-            $additionalImagesFromFolder = $this->getAdditionalImagesFromFolder($productFolder);
+            $additionalImagesFromFolder = $this->getAdditionalImagesFromFolder($productFolder, $productId);
             if (empty($additionalImagesFromFolder)) {
-                $additionalImagesFromFolder = $this->getAdditionalImagesFromFolder($excelProductFolder); // Fallback to Excel folder
+                $additionalImagesFromFolder = $this->getAdditionalImagesFromFolder($excelProductFolder, $productId); // Fallback to Excel folder
             }
 
             // Insert additional images into the product_images table
@@ -84,20 +84,21 @@ class ProductsSeeder extends Seeder
     private function getMainImageFromFolder($folder)
     {
         $mainImageFiles = File::glob($folder . '/main_image.*'); // Find any main_image.*
-        return count($mainImageFiles) > 0 ? 'product_images/' . basename($mainImageFiles[0]) : null;
+        return count($mainImageFiles) > 0 ? str_replace(public_path(), '', $mainImageFiles[0]) : null; // Return the relative path to the image
     }
 
     /**
      * Get all additional images (non-main images) from the specified folder.
      */
-    private function getAdditionalImagesFromFolder($folder)
+    private function getAdditionalImagesFromFolder($folder, $productId)
     {
         $imageFiles = File::files($folder);
         $additionalImages = [];
 
         foreach ($imageFiles as $file) {
             if (!str_starts_with($file->getFilename(), 'main_image') && $file->getFilename() != 'Thumbs.db') {
-                $additionalImages[] = $folder . '/' . $file->getFilename();
+                $relativePath = str_replace(public_path(), '', $folder . '/' . $file->getFilename());
+                $additionalImages[] = $relativePath;
             }
         }
         return $additionalImages;
