@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/excel_product_images
 /storage/*.key
 /vendor
 .env
