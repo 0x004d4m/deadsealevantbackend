@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsSeeder extends Seeder
@@ -32,6 +33,8 @@ class ProductsSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
+            Log::debug($productId);
+
             // Create folders for storing product images
             $productFolder = public_path('product_images/' . $productId);
             $excelProductFolder = public_path('excel_product_images/' . $productId);
@@ -49,11 +52,13 @@ class ProductsSeeder extends Seeder
 
             // Check if main image exists in the product folder
             $mainImageFromFolder = $this->getMainImageFromFolder($productFolder);
-
+            Log::debug('$mainImageFromFolder' . $mainImageFromFolder);
             // If the main image exists in the folder, use it. Otherwise, use the downloaded image.
             if ($mainImageFromFolder) {
                 $mainImageFile = $mainImageFromFolder;
             }
+
+            Log::debug('$mainImageFromFolder 2' . $mainImageFromFolder);
 
             // Update the product with the main image
             DB::table('products')->where('id', $productId)->update([
