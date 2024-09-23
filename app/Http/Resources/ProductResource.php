@@ -86,7 +86,7 @@ class ProductResource extends JsonResource
             }
         }
         $description = $this->description;
-        if (isset($request->id)) {
+        if (!isset($request->id)) {
             $description = substr($this->description, 0, 100);
         }
         return [
