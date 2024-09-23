@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('category_id')->on('categories')->references('id');
             $table->json('title');
             $table->json('description');
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->double('price')->default(0);
             $table->integer('stock')->default(0);
             $table->timestamps();
