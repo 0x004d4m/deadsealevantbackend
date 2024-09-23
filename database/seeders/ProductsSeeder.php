@@ -52,18 +52,26 @@ class ProductsSeeder extends Seeder
 
             // Check if main image exists in the product folder
             $mainImageFromFolder = $this->getMainImageFromFolder($productFolder);
-            Log::debug('$mainImageFromFolder' . $mainImageFromFolder);
-            // If the main image exists in the folder, use it. Otherwise, use the downloaded image.
+
+            // If the main image exists in the folder, use it. Otherwise, use the downloaded image from Excel.
             if ($mainImageFromFolder) {
-                $mainImageFile = $mainImageFromFolder;
+                // Main image exists in the folder
+                $mainImageFile = 'product_images/' . $productId . '/' . $mainImageFromFolder;
+            } else {
+                // No main image in the folder, so use the downloaded one from Excel
+                if ($mainImageFile) {
+                    $mainImageFile = 'excel_product_images/' . $productId . '/' . $mainImageFile;
+                }
             }
 
-            Log::debug('$mainImageFromFolder 2' . $mainImageFromFolder);
+            Log::debug('$mainImageFile' . $mainImageFile);
 
-            // Update the product with the main image
-            DB::table('products')->where('id', $productId)->update([
-                'image' => url('product_images/' . $productId . '/' . $mainImageFile),
-            ]);
+            // Update the product with the correct main image path (from either folder)
+            if ($mainImageFile) {
+                DB::table('products')->where('id', $productId)->update([
+                    'image' => url($mainImageFile),
+                ]);
+            }
 
             // Download and store additional images from Excel URLs in excel_product_images/{productId}
             $additionalImagesUrls = !empty($row[7]) ? explode(',', $this->sanitizeExcelFormula($row[7])) : [];
@@ -149,6 +157,7 @@ class ProductsSeeder extends Seeder
             }
         } catch (\Exception $e) {
             // Log error or handle exception (e.g., skip the image)
+            Log::error("Failed to download image from URL: $url, Error: " . $e->getMessage());
             return null;
         }
 
