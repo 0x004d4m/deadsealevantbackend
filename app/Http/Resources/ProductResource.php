@@ -72,7 +72,7 @@ class ProductResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $quantity_in_cart = 0;
+        $quantity_in_cart = 1;
         if($request->customer_id){
             $Cart = Cart::where('product_id', $this->id)->where('customer_id', $request->customer_id)->whereNull('order_id')->first();
             if($Cart){
