@@ -73,9 +73,11 @@ class HomeController extends Controller
         $langPath = lang_path();
         $files = File::allFiles($langPath);
         $languageFiles = [];
+        Log::debug($request->locale);
         foreach ($files as $file) {
             $path = $file->getPathname();
             if (strpos($path, 'vendor') === false && strpos($path, $request->locale) !== false) {
+                Log::debug($path);
                 $fileName = pathinfo($path, PATHINFO_FILENAME);
                 $arrayContent = include $path;
                 $languageFiles[$fileName] = $arrayContent;
