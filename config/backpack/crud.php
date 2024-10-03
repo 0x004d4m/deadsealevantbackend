@@ -7,6 +7,8 @@ return array (
   array (
     'ar' => 'Arabic',
     'en' => 'English',
+    'es' => 'Spanish',
+    'FR' => 'French',
   ),
   'view_namespaces' => 
   array (
