@@ -76,7 +76,7 @@ class HomeController extends Controller
         Log::debug($request->locale);
         foreach ($files as $file) {
             $path = $file->getPathname();
-            if (strpos($path, 'vendor') === false && strpos($path, $request->locale) !== false) {
+            if (strpos($path, 'vendor') === false && strpos($path, '/'.$request->locale.'/') !== false) {
                 Log::debug($path);
                 $fileName = pathinfo($path, PATHINFO_FILENAME);
                 $arrayContent = include $path;
