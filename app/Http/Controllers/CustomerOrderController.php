@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
+use App\Http\Requests\Customer\ReviewRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Exception;
@@ -100,4 +101,16 @@ class CustomerOrderController extends Controller
             return response()->json(["error" => [$e->getMessage()]], 500);
         }
     }
+
+    // public function review($order_id, $cart_item_id, ReviewRequest $request)
+    // {
+    //     try {
+    //         return OrderResource::collection(Order::where('customer_id', $request->customer_id)->get());
+    //     } catch (GeneralException $e) {
+    //         return $e->render();
+    //     } catch (Exception $e) {
+    //         Log::debug($e);
+    //         return response()->json(["error" => [$e->getMessage()]], 500);
+    //     }
+    // }
 }

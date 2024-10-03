@@ -19,5 +19,6 @@ Route::prefix('customers')->group(function(){
         Route::put('profile', [CustomerAuthController::class, 'profile']);
         Route::apiResource('addresses', CustomerAddressController::class);
         Route::get('orders', [CustomerOrderController::class, 'index']);
+        Route::post('orders/{order_id}/cart_items/{cart_item_id}', [CustomerOrderController::class, 'review']);
     });
 });
