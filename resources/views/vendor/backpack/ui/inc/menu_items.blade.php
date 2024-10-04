@@ -24,3 +24,5 @@
 <x-backpack::menu-item title="Contact requests" icon="la la-question" :link="backpack_url('contact-request')" />
 
 <x-backpack::menu-item title="Emails" icon="la la-question" :link="backpack_url('email')" />
+
+<x-backpack::menu-item title="Orders" icon="la la-question" :link="backpack_url('order')" />

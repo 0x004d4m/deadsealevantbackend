@@ -26,6 +26,7 @@ Route::group([
     Route::crud('country', 'CountryCrudController');
     Route::crud('order-status', 'OrderStatusCrudController');
     Route::crud('setting', 'SettingCrudController');
+    Route::crud('order', 'OrderCrudController');
 }); // this should be the absolute last line of this file
 
 /**
