@@ -61,9 +61,9 @@ class OrderCrudController extends CrudController
         $statusQuery = \App\Models\OrderStatus::query();
 
         if ($currentStatus == 2) {
-            $statusQuery->whereIn('id', [3, 4]);
+            $statusQuery->whereIn('id', [3, 4, $currentStatus]);
         } else {
-            $statusQuery->where('id', '<=', 1);
+            $statusQuery->where('id', '=', $currentStatus);
         }
 
         CRUD::addField([
