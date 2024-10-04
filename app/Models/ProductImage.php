@@ -26,7 +26,7 @@ class ProductImage extends Model
             return $val;
         }
         if (strpos($val, 'product_images')) {
-            return $val;
+            return url($val);
         }
         return url('storage/' . $val);
     }
