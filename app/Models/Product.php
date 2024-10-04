@@ -54,9 +54,11 @@ class Product extends Model
     public function getImageAttribute($val)  {
         if (strpos($val, 'http') === 0) {
             return $val;
-        } else {
-            return url('storage/' . $val);
         }
+        if (strpos($val, 'product_images')) {
+            return $val;
+        }
+        return url('storage/' . $val);
     }
 
     public function setProductImagesAttribute($images)

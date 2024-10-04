@@ -102,15 +102,75 @@ class CustomerOrderController extends Controller
         }
     }
 
-    // public function review($order_id, $cart_item_id, ReviewRequest $request)
-    // {
-    //     try {
-    //         return OrderResource::collection(Order::where('customer_id', $request->customer_id)->get());
-    //     } catch (GeneralException $e) {
-    //         return $e->render();
-    //     } catch (Exception $e) {
-    //         Log::debug($e);
-    //         return response()->json(["error" => [$e->getMessage()]], 500);
-    //     }
-    // }
+    /**
+     * @OA\Post(
+     *  path="/api/customers/orders/{order_id}/cart_items/{cart_item_id}",
+     *  summary="Checkout From Cart",
+     *  description="Checkout From Cart",
+     *  operationId="CustomerOrderReview",
+     *  tags={"CustomerOrder"},
+     *  security={{"bearerAuth": {}}},
+     *  @OA\Parameter(
+     *     name="id",
+     *     description="Order id",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Parameter(
+     *     name="id",
+     *     description="Cart Item id",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(ref="#/components/schemas/OrderRequest")
+     *  ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(ref="#/components/schemas/MepsRedirectResource")
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="message", type="string", example=""),
+     *      @OA\Property(property="errors", type="object",
+     *        @OA\Property(property="dynamic-error-keys", type="array",
+     *          @OA\Items(type="string")
+     *        )
+     *      )
+     *    )
+     *  )
+     * )
+     */
+    public function review($order_id, $cart_item_id, ReviewRequest $request)
+    {
+        try {
+            return OrderResource::collection(Order::where('customer_id', $request->customer_id)->get());
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::debug($e);
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
+    }
 }
