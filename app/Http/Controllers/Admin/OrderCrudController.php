@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\OrderRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class OrderCrudController
@@ -55,7 +56,8 @@ class OrderCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->crud->removeAllFields();
-        $currentStatus = $this->crud->getCurrentEntry()->order_status_id;
+        $currentStatus = $this->crud->getCurrentEntry()->id;
+        Log::debug($currentStatus);
         $statusQuery = \App\Models\OrderStatus::query();
 
         if ($currentStatus == 2) {
