@@ -7,11 +7,6 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class OrderCrudController
- * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
- */
 class OrderCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
@@ -19,11 +14,6 @@ class OrderCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
-    /**
-     * Configure the CrudPanel object. Apply settings to all operations.
-     *
-     * @return void
-     */
     public function setup()
     {
         CRUD::setModel(\App\Models\Order::class);
@@ -31,28 +21,75 @@ class OrderCrudController extends CrudController
         CRUD::setEntityNameStrings('order', 'orders');
     }
 
-    /**
-     * Define what happens when the List operation is loaded.
-     *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // set columns from db columns.
-
-        /**
-         * Columns can be defined using the fluent syntax:
-         * - CRUD::column('price')->type('number');
-         */
+        CRUD::setFromDb();
+        $this->crud->addColumn('guest_id', [
+            'label' => "Guest",
+            'type' => "select",
+            'name' => 'guest_id',
+            'entity' => 'guest',
+            'attribute' => "first_name",
+            'model' => 'App\Models\Guest'
+        ]);
+        $this->crud->setColumnDetails('guest_id', [
+            'label' => "Guest",
+            'type' => "select",
+            'name' => 'guest_id',
+            'entity' => 'guest',
+            'attribute' => "first_name",
+            'model' => 'App\Models\Guest'
+        ]);
+        $this->crud->addColumn('customer_id', [
+            'label' => "Customer",
+            'type' => "select",
+            'name' => 'customer_id',
+            'entity' => 'customer',
+            'attribute' => "username",
+            'model' => 'App\Models\Customer'
+        ]);
+        $this->crud->setColumnDetails('customer_id', [
+            'label' => "Customer",
+            'type' => "select",
+            'name' => 'customer_id',
+            'entity' => 'customer',
+            'attribute' => "username",
+            'model' => 'App\Models\Customer'
+        ]);
+        $this->crud->addColumn('customer_address_id', [
+            'label' => "Customer Address",
+            'type' => "select",
+            'name' => 'customer_address_id',
+            'entity' => 'customerAddress',
+            'attribute' => "address",
+            'model' => 'App\Models\CustomerAddress'
+        ]);
+        $this->crud->setColumnDetails('customer_address_id', [
+            'label' => "Customer Address",
+            'type' => "select",
+            'name' => 'customer_address_id',
+            'entity' => 'customerAddress',
+            'attribute' => "address",
+            'model' => 'App\Models\CustomerAddress'
+        ]);
+        $this->crud->addColumn('order_status_id', [
+            'label' => "OrderStatus",
+            'type' => "select",
+            'name' => 'order_status_id',
+            'entity' => 'orderStatus',
+            'attribute' => "name",
+            'model' => 'App\Models\OrderStatus'
+        ]);
+        $this->crud->setColumnDetails('order_status_id', [
+            'label' => "OrderStatus",
+            'type' => "select",
+            'name' => 'order_status_id',
+            'entity' => 'orderStatus',
+            'attribute' => "name",
+            'model' => 'App\Models\OrderStatus'
+        ]);
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
     protected function setupUpdateOperation()
     {
         $this->crud->removeAllFields();
@@ -77,5 +114,9 @@ class OrderCrudController extends CrudController
                 return $statusQuery->get();
             }),
         ]);
+    }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 }
