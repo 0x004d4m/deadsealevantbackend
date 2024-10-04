@@ -24,6 +24,11 @@ class OrderCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::setFromDb();
+        $this->crud->removeColumns([
+            'payment_id',
+            'transaction_reference',
+            'response_message',
+        ]);
         $this->crud->addColumn('guest_id', [
             'label' => "Guest",
             'type' => "select",
