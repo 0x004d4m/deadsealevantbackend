@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Exceptions\GeneralException;
 use App\Http\Requests\Customer\ReviewRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Cart;
 use App\Models\Order;
+use App\Models\ProductReview;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -130,12 +132,11 @@ class CustomerOrderController extends Controller
      *  ),
      *  @OA\RequestBody(
      *    required=true,
-     *    @OA\JsonContent(ref="#/components/schemas/OrderRequest")
+     *    @OA\JsonContent(ref="#/components/schemas/ReviewRequest")
      *  ),
      *  @OA\Response(
-     *    response=200,
-     *    description="Success",
-     *    @OA\JsonContent(ref="#/components/schemas/MepsRedirectResource")
+     *    response=204,
+     *    description="success",
      *  ),
      *  @OA\Response(
      *    response=401,
@@ -165,7 +166,21 @@ class CustomerOrderController extends Controller
     public function review($order_id, $cart_item_id, ReviewRequest $request)
     {
         try {
-            return OrderResource::collection(Order::where('customer_id', $request->customer_id)->get());
+            $Order = Order::where('id', $order_id)->first();
+            if(!$Order){
+                throw new GeneralException(["order_id" => "Order ID Error"]);
+            }
+            $Cart = Cart::where('id', $cart_item_id)->first();
+            if(!$Cart){
+                throw new GeneralException(["cart_item_id" => "Cart Item ID Error"]);
+            }
+            $ProductReview = ProductReview::create([
+                'stars' => $request->stars,
+                'message' => $request->message,
+                'customer_id' => $request->customer_id,
+                'product_id' => $Cart->product_id,
+            ]);
+            return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
             return $e->render();
         } catch (Exception $e) {
