@@ -74,7 +74,7 @@ class OrderCrudController extends CrudController
             'attribute' => 'name',
             'model' => \App\Models\OrderStatus::class,
             'options'   => (function () use ($statusQuery) {
-                return $statusQuery->get()->pluck('name', 'id');
+                return $statusQuery->get();
             }),
         ]);
     }
