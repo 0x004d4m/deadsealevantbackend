@@ -62,7 +62,6 @@ class HomeResource extends JsonResource
      */
     public function toArray($request): array
     {
-        Log::debug('toArray');
         return [
             'translations' => $this->resource['translations'],
             'images' => ImageResource::collection($this->resource['images']),

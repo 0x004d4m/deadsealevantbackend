@@ -102,7 +102,7 @@ class ProductResource extends JsonResource
             'price' => $this->price .' $',
             'stock' => $this->stock,
             'quantity_in_cart' => $quantity_in_cart,
-            'shipping_terms' => $this->str_replace(__('terms_and_conditions.shipping')),
+            'shipping_terms' => $this->removeChars(__('terms_and_conditions.shipping')),
             'product_reviews' => ProductReviewsResource::collection($this->productReviews),
             'product_images' => ProductImagesResource::collection($this->productImages),
         ];
