@@ -135,9 +135,28 @@ class OrderController extends Controller
      */
     private function attachCartsToOrder($id, $orderId, $type)
     {
-        Cart::where($type . '_id', $id)
+        $carts = Cart::where($type . '_id', $id)
             ->whereNull('order_id')
-            ->update(['order_id' => $orderId]);
+            ->get();
+
+        foreach ($carts as $cart) {
+            $product = $cart->product;
+
+            // Check if the stock is enough to fulfill the order
+            if ($product->stock < $cart->quantity) {
+                throw new GeneralException(["order_id"=>"Insufficient stock for product: {$product->name}"]);
+            }
+
+            // Deduct the quantity from the product stock
+            $product->stock -= $cart->quantity;
+
+            // Save the updated stock
+            $product->save();
+
+            // Update the cart with the order ID
+            $cart->order_id = $orderId;
+            $cart->save();
+        }
     }
 
     /**
