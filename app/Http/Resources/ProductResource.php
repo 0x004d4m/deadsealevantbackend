@@ -68,7 +68,7 @@ class ProductResource extends JsonResource
     private function removeChars($text)
     {
         $text = str_replace(['\r', '\n'], '', $text);
-        return mb_convert_encoding($text, 'UTF-8', 'auto');
+        return str_replace('?','',mb_convert_encoding($text, 'UTF-8', 'auto'));
     }
     /**
      * Transform the resource into an array.
