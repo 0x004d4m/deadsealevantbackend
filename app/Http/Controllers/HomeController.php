@@ -82,17 +82,12 @@ class HomeController extends Controller
             }
         }
         $images = Image::all();
-        Log::debug('images');
         $categories = Category::all();
-        Log::debug('categories');
         $countries = Country::all();
-        Log::debug('countries');
         $availability = [
             ['id' => 'true', 'name' => __('products.in_stock')], ['id' => 'false', 'name' => __('products.out_of_stock')]
         ];
-        Log::debug('availability');
         $setting = Setting::first();
-        Log::debug('availability');
         return new HomeResource($languageFiles, $images, $categories, $availability, $setting, $countries);
     }
 
