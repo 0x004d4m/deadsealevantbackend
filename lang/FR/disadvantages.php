@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'title' => 'Say Goodbye to Skincare Woes with Dead Sea Levant',
-    'button' => 'Shop products',
-    'subtitle1' => 'No Harmful Chemicals',
-    'description1' => 'Avoid harsh artificial additives that can irritate your skin. Our products are made with pure, natural ingredients, ensuring gentle and safe skincare.',
-    'subtitle2' => 'No Ineffective Results',
-    'description2' => 'Forget the frustration of ineffective products. Our mineral-rich formulations deliver visible improvements, leaving your skin healthy and radiant.',
-    'subtitle3' => 'No Environmental Harm',
-    'description3' => 'Avoid contributing to environmental damage. Our sustainable practices and eco-friendly packaging ensure that your skincare routine is as good for the planet as it is for you.',
+    'description3' => 'Évitez de contribuer aux dommages environnementaux. Nos pratiques durables et nos emballages écologiques garantissent que votre routine de soins de la peau soit aussi bénéfique pour la planète que pour vous.',
+    'description1' => 'Évitez les additifs artificiels agressifs qui peuvent irriter votre peau. Nos produits sont fabriqués avec des ingrédients naturels et purs, garantissant des soins de la peau doux et sûrs.',
+    'description2' => 'Oubliez la frustration des produits inefficaces. Nos formulations riches en minéraux offrent des améliorations visibles, laissant votre peau saine et radieuse.',
+    'subtitle3' => 'Pas de dommages environnementaux',
+    'subtitle1' => 'Pas de produits chimiques nocifs',
+    'subtitle2' => 'Pas de résultats inefficaces',
+    'title' => 'Dites adieu aux problèmes de soin de la peau avec Dead Sea Levant',
+    'button' => 'Acheter des produits',
 ];

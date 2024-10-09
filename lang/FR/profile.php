@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'title' => 'User Profile',
-    'welcome' => 'Welcome',
-    'orders' => 'Orders',
-    'address' => 'Your address',
-    'payment_method' => 'Payment Method',
-    'settings' => 'Account settings',
+    'settings' => 'Paramètres du compte',
+    'orders' => 'Commandes',
+    'payment_method' => 'Méthode de paiement',
+    'title' => 'Profil de l\'utilisateur',
+    'welcome' => 'Bienvenue',
+    'address' => 'Votre adresse',
 ];

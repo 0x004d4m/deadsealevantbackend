@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'title' => 'User profile',
-    'register' => 'Register',
-    'username' => 'User name or Email',
-    'email' => 'Email',
-    'password' => 'Password',
-    'reset_password' => 'Password',
-    'confirm_password' => 'Confirm password',
-    'confirm_new_password' => 'Confirm New password',
-    'register_button' => 'Sign up',
-    'register_text' => 'Already have an account?',
-    'register_link' => 'Login now',
-    'guest_button' => 'Continue as guest',
+    'register_text' => 'Vous avez déjà un compte ?',
+    'confirm_new_password' => 'Confirmez le nouveau mot de passe',
+    'confirm_password' => 'Confirmez le mot de passe',
+    'guest_button' => 'Continuer en tant qu\'invité',
+    'email' => 'E-mail',
+    'register_link' => 'Connectez-vous maintenant',
+    'password' => 'Mot de passe',
+    'reset_password' => 'Mot de passe',
+    'register' => 'S\'inscrire',
+    'register_button' => 'Créer un compte',
+    'username' => 'Nom d\'utilisateur ou Email',
+    'title' => 'Profil de l\'utilisateur',
 ];

@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'title' => 'People also bought',
-    'button' => 'Add to cart',
+    'button' => 'Ajouter au panier',
+    'title' => 'Les personnes ont également acheté',
 ];

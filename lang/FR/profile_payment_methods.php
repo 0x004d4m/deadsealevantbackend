@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'title' => 'Your cards',
-    'payment_method_add' => 'Add new card',
-    'no_payment_methods' => 'No card was added',
-    'back' => 'Back',
-    'payment_method_field1' => 'Card number',
-    'payment_method_field2' => 'Expiry date',
-    'payment_method_field3' => 'CVV code',
-    'save_button' => 'Save',
-    'delete_button' => 'Delete',
-    'edit_button' => 'Edit',
-    'expires' => 'Expires in',
+    'payment_method_add' => 'Ajouter une nouvelle carte',
+    'back' => 'Retour',
+    'payment_method_field3' => 'Code CVV',
+    'payment_method_field1' => 'Numéro de carte',
+    'delete_button' => 'Supprimer',
+    'edit_button' => 'Modifier',
+    'expires' => 'Expire dans',
+    'payment_method_field2' => 'Date d\'expiration',
+    'no_payment_methods' => 'Aucune carte n\'a été ajoutée',
+    'save_button' => 'Enregistrer',
+    'title' => 'Vos cartes',
 ];

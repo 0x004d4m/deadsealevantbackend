@@ -1,16 +1,16 @@
 <?php
 
 return [
+    'logged_in_item1' => 'Compte',
+    'item3' => 'Contactez-nous',
+    'not_logged_in_item2' => 'Créer un compte',
     'title' => 'Dead Sea Levant',
-    'item1' => 'Home',
-    'item2' => 'Our Products',
-    'item3' => 'Contact us',
-    'item4' => 'Our Collections',
-    'logged_in_item1' => 'Account',
-    'logged_in_item2' => 'Your address',
-    'logged_in_item3' => 'Payment method',
-    'logged_in_item4' => 'Sign out',
-    'not_logged_in_item1' => 'Log in',
-    'not_logged_in_item2' => 'Create account',
-    'search' => 'Search for products or information',
+    'item1' => 'Accueil',
+    'not_logged_in_item1' => 'Se connecter',
+    'item4' => 'Nos Collections',
+    'item2' => 'Nos Produits',
+    'logged_in_item3' => 'Méthode de paiement',
+    'search' => 'Rechercher des produits ou des informations',
+    'logged_in_item4' => 'Se déconnecter',
+    'logged_in_item2' => 'Votre adresse',
 ];

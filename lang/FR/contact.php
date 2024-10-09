@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'title' => 'Contact us',
-    'description1' => 'Have Questions?',
-    'description2' => 'We’re Here to Help!',
-    'description3' => 'Connect with Us for Radiant Skin',
-    'field1' => 'Your name',
-    'field2' => 'Email',
-    'field3' => 'Subject',
+    'description3' => 'Connectez-vous avec nous pour une peau radieuse',
+    'title' => 'Contactez-nous',
+    'field2' => 'E-mail',
+    'description1' => 'Vous avez des questions ?',
     'field4' => 'Message',
-    'button' => 'Send',
-    'success' => 'Thank you for reaching out! We\'ll get back to you as soon as possible.',
+    'button' => 'Envoyer',
+    'field3' => 'Objet',
+    'success' => 'Merci de nous avoir contactés ! Nous vous répondrons dès que possible.',
+    'description2' => 'Nous sommes là pour vous aider !',
+    'field1' => 'Votre nom',
 ];
