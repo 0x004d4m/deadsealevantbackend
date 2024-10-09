@@ -73,23 +73,26 @@ class HomeController extends Controller
         $langPath = lang_path();
         $files = File::allFiles($langPath);
         $languageFiles = [];
-        Log::debug($request->locale);
         foreach ($files as $file) {
             $path = $file->getPathname();
             if (strpos($path, 'vendor') === false && strpos($path, '/'.$request->locale.'/') !== false) {
-                Log::debug($path);
                 $fileName = pathinfo($path, PATHINFO_FILENAME);
                 $arrayContent = include $path;
                 $languageFiles[$fileName] = $arrayContent;
             }
         }
         $images = Image::all();
+        Log::debug('images');
         $categories = Category::all();
+        Log::debug('categories');
         $countries = Country::all();
+        Log::debug('countries');
         $availability = [
             ['id' => 'true', 'name' => __('products.in_stock')], ['id' => 'false', 'name' => __('products.out_of_stock')]
         ];
+        Log::debug('availability');
         $setting = Setting::first();
+        Log::debug('availability');
         return new HomeResource($languageFiles, $images, $categories, $availability, $setting, $countries);
     }
 

@@ -65,6 +65,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class ProductResource extends JsonResource
 {
+    private function removeChars($text){
+        return str_replace('\r', '', str_replace('\n', '', $text));
+    }
     /**
      * Transform the resource into an array.
      *
@@ -93,13 +96,13 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'category_id' => $this->category_id,
             'category' => new CategoryResource($this->category),
-            'title' => $this->title,
-            'description' => $description,
+            'title' => $this->removeChars($this->title),
+            'description' => $this->removeChars($description),
             'image' => $this->image,
             'price' => $this->price .' $',
             'stock' => $this->stock,
             'quantity_in_cart' => $quantity_in_cart,
-            'shipping_terms' => __('terms_and_conditions.shipping'),
+            'shipping_terms' => $this->str_replace(__('terms_and_conditions.shipping')),
             'product_reviews' => ProductReviewsResource::collection($this->productReviews),
             'product_images' => ProductImagesResource::collection($this->productImages),
         ];
