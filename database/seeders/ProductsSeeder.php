@@ -32,8 +32,6 @@ class ProductsSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            Log::debug($productId);
-
             // Create folders for storing product images if they don't exist
             $productFolder = public_path('product_images/' . $productId);
             $excelProductFolder = public_path('excel_product_images/' . $productId);

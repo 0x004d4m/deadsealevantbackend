@@ -99,10 +99,9 @@ class OrderCrudController extends CrudController
     {
         $this->crud->removeAllFields();
         $currentStatus = $this->crud->getCurrentEntry()->id;
-        Log::debug($currentStatus);
         $statusQuery = \App\Models\OrderStatus::query();
 
-        if ($currentStatus == 2) {
+        if ($currentStatus == 1) {
             $statusQuery->whereIn('id', [3, 4, $currentStatus]);
         } else {
             $statusQuery->where('id', '=', $currentStatus);
