@@ -65,8 +65,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class ProductResource extends JsonResource
 {
-    private function removeChars($text){
-        return str_replace('\r', '', str_replace('\n', '', $text));
+    private function removeChars($text)
+    {
+        $text = str_replace(['\r', '\n'], '', $text);
+        return mb_convert_encoding($text, 'UTF-8', 'auto');
     }
     /**
      * Transform the resource into an array.
