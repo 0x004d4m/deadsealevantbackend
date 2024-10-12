@@ -107,13 +107,13 @@ class CustomerOrderController extends Controller
     /**
      * @OA\Post(
      *  path="/api/customers/orders/{order_id}/cart_items/{cart_item_id}",
-     *  summary="Checkout From Cart",
-     *  description="Checkout From Cart",
+     *  summary="Review Order Cart Item",
+     *  description="Review Order Cart Item",
      *  operationId="CustomerOrderReview",
      *  tags={"CustomerOrder"},
      *  security={{"bearerAuth": {}}},
      *  @OA\Parameter(
-     *     name="id",
+     *     name="order_id",
      *     description="Order id",
      *     required=true,
      *     in="path",
@@ -122,7 +122,7 @@ class CustomerOrderController extends Controller
      *     )
      *  ),
      *  @OA\Parameter(
-     *     name="id",
+     *     name="cart_item_id",
      *     description="Cart Item id",
      *     required=true,
      *     in="path",

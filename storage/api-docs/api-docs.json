@@ -1365,12 +1365,12 @@
                 "tags": [
                     "CustomerOrder"
                 ],
-                "summary": "Checkout From Cart",
-                "description": "Checkout From Cart",
+                "summary": "Review Order Cart Item",
+                "description": "Review Order Cart Item",
                 "operationId": "CustomerOrderReview",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "order_id",
                         "in": "path",
                         "description": "Order id",
                         "required": true,
@@ -1379,7 +1379,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "cart_item_id",
                         "in": "path",
                         "description": "Cart Item id",
                         "required": true,
