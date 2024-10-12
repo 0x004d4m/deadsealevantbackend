@@ -2118,7 +2118,7 @@
                 }
             }
         },
-        "/api/orders/repay/{id}": {
+        "/api/orders/{id}/repay": {
             "post": {
                 "tags": [
                     "Order"

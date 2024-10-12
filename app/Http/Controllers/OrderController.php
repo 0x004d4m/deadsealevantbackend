@@ -320,7 +320,7 @@ class OrderController extends Controller
 
     /**
      * @OA\Post(
-     *  path="/api/orders/repay/{id}",
+     *  path="/api/orders/{id}/repay",
      *  summary="Repay for Order",
      *  description="Repay for Order by Order ID",
      *  operationId="RepayOrder",
