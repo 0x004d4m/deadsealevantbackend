@@ -32,4 +32,9 @@ class Cart extends Model
     {
         return $this->belongsTo(Guest::class);
     }
+
+    public function productReview()
+    {
+        return $this->hasOne(ProductReview::class);
+    }
 }
