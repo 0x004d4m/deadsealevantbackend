@@ -19,4 +19,5 @@ Route::middleware(CustomerAuth::class)->group(function () {
     });
 });
 Route::get('/orders/{id}', [OrderController::class, 'show']);
+Route::post('/orders/{id}/repay', [OrderController::class, 'repay']);
 Route::post('/orders/paymentCallback', [OrderController::class, 'paymentCallback'])->name('payment.callback');
