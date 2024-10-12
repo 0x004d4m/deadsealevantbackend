@@ -179,7 +179,7 @@ class CustomerOrderController extends Controller
                 'message' => $request->message,
                 'customer_id' => $request->customer_id,
                 'product_id' => $Cart->product_id,
-                'cart_id' => $Cart->cart_item_id,
+                'cart_id' => $cart_item_id,
             ]);
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
