@@ -317,4 +317,68 @@ class OrderController extends Controller
             return response()->json(["error" => [$e->getMessage()]], 500);
         }
     }
+
+    /**
+     * @OA\Post(
+     *  path="/api/orders/repay/{id}",
+     *  summary="Repay for Order",
+     *  description="Repay for Order by Order ID",
+     *  operationId="RepayOrder",
+     *  tags={"Order"},
+     *  security={{"bearerAuth": {}}},
+     *  @OA\Parameter(
+     *     name="id",
+     *     description="Order id",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *  ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(ref="#/components/schemas/MepsRedirectResource")
+     *  ),
+     *  @OA\Response(
+     *    response=401,
+     *    description="Unauthorized",
+     *  ),
+     *  @OA\Response(
+     *    response=500,
+     *    description="Server Error",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="error")
+     *    )
+     *  ),
+     *  @OA\Response(
+     *    response=404,
+     *    description="Order Not Found",
+     *  )
+     * )
+     */
+    public function repay(Request $request, $id)
+    {
+        try {
+            // Find the order by ID
+            $order = Order::find($id);
+
+            if (!$order) {
+                throw new GeneralException(["order_id" => "Order not found"]);
+            }
+
+            // Check if the order is eligible for repayment (e.g., failed status or awaiting payment)
+            if ($order->order_status_id !== 2) {  // Assuming 3 is for failed orders
+                throw new GeneralException(["order_id" => "Order is not eligible for repayment"]);
+            }
+
+            // Initiate the payment process
+            return $this->initiatePayment($order);
+        } catch (GeneralException $e) {
+            return $e->render();
+        } catch (Exception $e) {
+            Log::error('Repayment error: ' . $e->getMessage());
+            return response()->json(["error" => [$e->getMessage()]], 500);
+        }
+    }
 }
