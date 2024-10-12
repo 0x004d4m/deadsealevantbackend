@@ -34,6 +34,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         property="guest_id",
  *         type="int"
  *     ),
+ *     @OA\Property(
+ *         property="has_product_review",
+ *         type="boolean"
+ *     ),
  * )
  */
 class CartResource extends JsonResource
@@ -52,6 +56,7 @@ class CartResource extends JsonResource
             'product' => new ProductResource($this->product),
             'customer_id' => $this->customer_id,
             'guest_id' => $this->guest_id,
+            'has_product_review' => $this->productReview ? true : false,
         ];
     }
 }

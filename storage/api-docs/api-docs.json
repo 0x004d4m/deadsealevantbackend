@@ -2526,6 +2526,9 @@
                     },
                     "guest_id": {
                         "type": "integer"
+                    },
+                    "has_product_review": {
+                        "type": "boolean"
                     }
                 },
                 "type": "object"

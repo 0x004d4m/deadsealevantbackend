@@ -15,6 +15,7 @@ class ProductReview extends Model
         'message',
         'customer_id',
         'product_id',
+        'cart_id',
     ];
 
     public function product()
@@ -25,5 +26,10 @@ class ProductReview extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
     }
 }
