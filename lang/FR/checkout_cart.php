@@ -12,5 +12,5 @@ return [
     'title' => 'Votre panier',
     'free' => 'gratuit',
     'free_after' => 'standard gratuit au-dessus de',
-    'free' => 'Repay',
+    'repay' => 'Repay',
 ];

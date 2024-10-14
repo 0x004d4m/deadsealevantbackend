@@ -12,5 +12,5 @@ return [
     'free_after' => 'free standerd over',
     'free' => 'free',
     'currency' => '$',
-    'free' => 'Repay',
+    'repay' => 'Repay',
 ];

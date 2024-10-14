@@ -12,5 +12,5 @@ return [
     'title' => 'Tu Carrito',
     'free' => 'Gratis',
     'free_after' => 'Envío estándar gratuito en compras superiores a',
-    'free' => 'Repay',
+    'repay' => 'Repay',
 ];
