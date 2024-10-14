@@ -15,4 +15,11 @@ return [
     'view' => 'Ver pedido',
     'shipping_to' => 'Tu pedido será enviado a',
     'shipping_tax_hint' => 'Envío gratis en pedidos con transporte estándar por compras superiores a \$280',
+    'review_title' => 'Thank you for your review',
+    'review_title2' => 'Write a review',
+    'review_button' => 'Submit',
+    'review_success' => 'Your opinion matters',
+    'review' => 'Review',
+    'review_table_title' => 'Your opinion',
+    'order_id' => 'Order #',
 ];
