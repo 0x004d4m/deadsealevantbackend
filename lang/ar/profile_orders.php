@@ -15,4 +15,11 @@ return [
     'view' => 'عرض الطلب',
     'no_orders' => 'لم يتم العثور على طلبات',
     'tax_hint' => 'محسوبة عند الخروج',
+    'review_title' => 'Thank you for your review',
+    'review_title2' => 'Write a review',
+    'review_button' => 'Submit',
+    'review_success' => 'Your opinion matters',
+    'review' => 'Review',
+    'review_table_title' => 'Your opinion',
+    'order_id' => 'Order #',
 ];
