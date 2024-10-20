@@ -199,7 +199,7 @@ class OrderController extends Controller
             "tran_class" => "ecom",
             "cart_id" => $Order->payment_id,
             "cart_description" => "Order #{$Order->id}",
-            "cart_currency" => "JOD",
+            "cart_currency" => "USD",
             "cart_amount" => $Order->total,
             "callback" => route('payment.callback'),
             "return" => env('SITE_URL') . '/paymentReturn?order_id='. $Order->id
