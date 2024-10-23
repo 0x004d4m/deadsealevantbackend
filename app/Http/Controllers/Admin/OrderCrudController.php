@@ -122,5 +122,37 @@ class OrderCrudController extends CrudController
     protected function setupShowOperation()
     {
         $this->setupListOperation();
+
+        CRUD::addColumn([
+            'name' => 'customer_or_guest',
+            'label' => 'Customer/Guest',
+            'type' => 'custom_html',
+            'value' => function ($entry) {
+                if ($entry->customer_id) {
+                    return
+                        '<strong>Customer Name:</strong> ' . $entry->customer->first_name . " " . $entry->customer->last_name . '<br>' .
+                        '<strong>Email:</strong> ' . $entry->customer->email . '<br>' .
+                        '<strong>Country:</strong> ' . $entry->customerAddress->country->name . '<br>' .
+                        '<strong>Phone Number:</strong> ' . $entry->customerAddress->phone_number . '<br>' .
+                        '<strong>Address:</strong> ' . $entry->customerAddress->address . '<br>' .
+                        '<strong>Address Details:</strong> ' . $entry->customerAddress->address_details . '<br>' .
+                        '<strong>City:</strong> ' . $entry->customerAddress->city . '<br>' .
+                        '<strong>State:</strong> ' . $entry->customerAddress->state . '<br>' .
+                        '<strong>ZIP Code:</strong> ' . $entry->customerAddress->zip_code;
+                } elseif ($entry->guest_id) {
+                    return
+                        '<strong>Guest Name:</strong> ' . $entry->guest->first_name . " " . $entry->guest->last_name . '<br>' .
+                        '<strong>Country:</strong> ' . $entry->guest->country->name . '<br>' .
+                        '<strong>Phone Number:</strong> ' . $entry->guest->phone_number . '<br>' .
+                        '<strong>Address:</strong> ' . $entry->guest->address . '<br>' .
+                        '<strong>Address Details:</strong> ' . $entry->guest->address_details . '<br>' .
+                        '<strong>City:</strong> ' . $entry->guest->city . '<br>' .
+                        '<strong>State:</strong> ' . $entry->guest->state . '<br>' .
+                        '<strong>ZIP Code:</strong> ' . $entry->guest->zip_code;
+                } else {
+                    return 'Unknown';
+                }
+            }
+        ]);
     }
 }
