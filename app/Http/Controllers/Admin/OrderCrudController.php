@@ -93,35 +93,6 @@ class OrderCrudController extends CrudController
             'attribute' => "name",
             'model' => 'App\Models\OrderStatus'
         ]);
-    }
-
-    protected function setupUpdateOperation()
-    {
-        $this->crud->removeAllFields();
-        $currentStatus = $this->crud->getCurrentEntry()->id;
-        $statusQuery = \App\Models\OrderStatus::query();
-
-        if ($currentStatus == 1) {
-            $statusQuery->whereIn('id', [3, 4, $currentStatus]);
-        } else {
-            $statusQuery->where('id', '=', $currentStatus);
-        }
-
-        CRUD::addField([
-            'name' => 'order_status_id',
-            'label' => 'Order Status',
-            'type' => 'select',
-            'entity' => 'orderStatus',
-            'attribute' => 'name',
-            'model' => \App\Models\OrderStatus::class,
-            'options'   => (function () use ($statusQuery) {
-                return $statusQuery->get();
-            }),
-        ]);
-    }
-    protected function setupShowOperation()
-    {
-        $this->setupListOperation();
 
         CRUD::addColumn([
             'name' => 'customer_or_guest',
@@ -154,5 +125,34 @@ class OrderCrudController extends CrudController
                 }
             }
         ]);
+    }
+
+    protected function setupUpdateOperation()
+    {
+        $this->crud->removeAllFields();
+        $currentStatus = $this->crud->getCurrentEntry()->id;
+        $statusQuery = \App\Models\OrderStatus::query();
+
+        if ($currentStatus == 1) {
+            $statusQuery->whereIn('id', [3, 4, $currentStatus]);
+        } else {
+            $statusQuery->where('id', '=', $currentStatus);
+        }
+
+        CRUD::addField([
+            'name' => 'order_status_id',
+            'label' => 'Order Status',
+            'type' => 'select',
+            'entity' => 'orderStatus',
+            'attribute' => 'name',
+            'model' => \App\Models\OrderStatus::class,
+            'options'   => (function () use ($statusQuery) {
+                return $statusQuery->get();
+            }),
+        ]);
+    }
+    protected function setupShowOperation()
+    {
+        $this->setupListOperation();
     }
 }
