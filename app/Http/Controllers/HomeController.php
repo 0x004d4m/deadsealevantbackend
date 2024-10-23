@@ -268,7 +268,7 @@ class HomeController extends Controller
      */
     public function products(Request $request)
     {
-        return ProductResource::collection(Product::filter(new ProductFilters($request))->paginate(12));
+        return ProductResource::collection(Product::filter(new ProductFilters($request))->paginate(Product::count()));
     }
 
     /**
