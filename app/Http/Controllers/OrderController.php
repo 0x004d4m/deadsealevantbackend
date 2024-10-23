@@ -8,10 +8,12 @@ use App\Models\Cart;
 use App\Models\Guest;
 use App\Models\Order;
 use App\Models\Setting;
+use App\Notifications\OrderBookedNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification; 
 
 /**
  * @OA\Tag(
@@ -244,6 +246,8 @@ class OrderController extends Controller
                     'response_message' => $data['payment_result']['response_message'],
                 ]);
                 Log::info('Order #' . $order->id . ' payment successful.');
+                Notification::route('telegram', env('TELEGRAM_ADMIN_CHAT_ID'))
+                ->notify(new OrderBookedNotification($order));
             } else {
                 $order->update([
                     'order_status_id' => 3,

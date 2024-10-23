@@ -15,11 +15,13 @@ use App\Models\Email;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Notifications\ContactRequestNotification;
 use Backpack\LangFileManager\app\Models\Language;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * @OA\Tag(
@@ -130,12 +132,14 @@ class HomeController extends Controller
     public function contactRequest(ContactRequestRequest $contactRequestRequest)
     {
         try {
-            ContactRequest::create([
+            $ContactRequest = ContactRequest::create([
                 'name' => $contactRequestRequest->name,
                 'email' => $contactRequestRequest->email,
                 'subject' => $contactRequestRequest->subject,
                 'message' => $contactRequestRequest->message,
             ]);
+            Notification::route('telegram', env('TELEGRAM_ADMIN_CHAT_ID'))
+            ->notify(new ContactRequestNotification($ContactRequest->id));
             return response()->json()->setStatusCode(204);
         } catch (GeneralException $e) {
             return $e->render();
