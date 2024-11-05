@@ -191,9 +191,9 @@ class OrderCrudController extends CrudController
                     <tr>
                         <td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>{$imageTag}</td>
                         <td style='border: 1px solid #ddd; padding: 8px;'>{$productTitle}</td>
-                        <td style='border: 1px solid #ddd; padding: 8px;'>{$price}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$price}$</td>
                         <td style='border: 1px solid #ddd; padding: 8px;'>{$quantity}</td>
-                        <td style='border: 1px solid #ddd; padding: 8px;'>{$total}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$total}$</td>
                     </tr>";
                 }
 
