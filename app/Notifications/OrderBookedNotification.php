@@ -39,6 +39,6 @@ class OrderBookedNotification extends Notification
             ->content("A new order has been booked!\n\n" .
                 "Customer: {$user}\n" .
                 "Total: {$this->order->total}")
-            ->button('View Order', url("/admin/order/{$this->order->id}"));
+            ->button('View Order', url("/admin/order/{$this->order->id}/show"));
     }
 }

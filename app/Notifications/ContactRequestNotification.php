@@ -30,6 +30,6 @@ class ContactRequestNotification extends Notification
         return TelegramMessage::create()
             ->to(env('TELEGRAM_ADMIN_CHAT_ID'))  // Send to admin
             ->content("A new Contact Request!")
-            ->button('View Request', url("/admin/contact-request/{$this->id}"));
+            ->button('View Request', url("/admin/contact-request/{$this->id}/show"));
     }
 }
