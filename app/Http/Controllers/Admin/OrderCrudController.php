@@ -167,9 +167,9 @@ class OrderCrudController extends CrudController
                     $price = $cart->product ? $cart->product->price : 'N/A';
                     $imageUrl = $cart->product ? $cart->product->image : null;
 
-                    // Display image if available, with a fallback message if not
+                    // Create clickable image if available, with fallback text if not
                     $imageTag = $imageUrl
-                        ? "<img src='{$imageUrl}' alt='{$productTitle}' style='width: 50px; height: 50px; object-fit: cover; margin-right: 10px;'>"
+                        ? "<a href='{$imageUrl}' target='_blank'><img src='{$imageUrl}' alt='{$productTitle}' style='width: 50px; height: 50px; object-fit: cover; margin-right: 10px;'></a>"
                         : "<span>No image available</span>";
 
                     $html .= "<li>{$imageTag} <strong>Product:</strong> {$productTitle} - <strong>Quantity:</strong> {$quantity} - <strong>Price:</strong> {$price}</li>";
