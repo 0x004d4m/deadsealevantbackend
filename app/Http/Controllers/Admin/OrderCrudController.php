@@ -162,7 +162,7 @@ class OrderCrudController extends CrudController
             'label' => 'Carts',
             'type' => 'custom_html',
             'value' => function ($entry) {
-                $html = '<table style="width: 100%; border-collapse: collapse;">';
+                $html = '<div class="table-responsive"><table style="width: 100%; border-collapse: collapse;">';
                 $html .= '
                 <thead>
                     <tr>
@@ -197,7 +197,7 @@ class OrderCrudController extends CrudController
                     </tr>";
                 }
 
-                $html .= '</tbody></table>';
+                $html .= '</tbody></table></div>';
                 return $html;
             }
         ])->beforeColumn('subtotal'); // Adjust this to place the carts column as needed
