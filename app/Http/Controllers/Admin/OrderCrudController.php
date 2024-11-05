@@ -162,7 +162,8 @@ class OrderCrudController extends CrudController
             'label' => 'Carts',
             'type' => 'custom_html',
             'value' => function ($entry) {
-                $html = '<div class="table-responsive"><table style="width: 100%; border-collapse: collapse;">';
+                $html = '<div style="overflow-x: auto; width: 100%;">';
+                $html .= '<table style="width: 100%; border-collapse: collapse;">';
                 $html .= '
                 <thead>
                     <tr>
