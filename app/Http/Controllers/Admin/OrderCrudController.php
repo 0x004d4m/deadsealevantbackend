@@ -156,22 +156,22 @@ class OrderCrudController extends CrudController
     {
         $this->setupListOperation();
 
-        // Add the carts column as the fifth column, displayed as a table
+        // Add the carts column as the fifth column, displayed as a responsive table
         CRUD::addColumn([
             'name' => 'carts',
             'label' => 'Carts',
             'type' => 'custom_html',
             'value' => function ($entry) {
                 $html = '<div style="overflow-x: auto; width: 100%;">';
-                $html .= '<table style="width: 100%; border-collapse: collapse;">';
+                $html .= '<table style="width: 100%; border-collapse: collapse; min-width: 600px;">';
                 $html .= '
                 <thead>
                     <tr>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Image</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Product</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Price</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; min-width: 80px;">Image</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; min-width: 100px;">Product</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; min-width: 80px;">Price</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; min-width: 80px;">Quantity</th>
+                        <th style="border: 1px solid #ddd; padding: 8px; min-width: 80px;">Total</th>
                     </tr>
                 </thead>
                 <tbody>';
