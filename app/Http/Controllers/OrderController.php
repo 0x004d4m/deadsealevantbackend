@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\GeneralException;
 use App\Http\Resources\OrderResource;
+use App\Mail\OrderMail;
 use App\Models\Cart;
 use App\Models\Guest;
 use App\Models\Order;
@@ -13,7 +14,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification; 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * @OA\Tag(
@@ -248,6 +250,11 @@ class OrderController extends Controller
                 Log::info('Order #' . $order->id . ' payment successful.');
                 Notification::route('telegram', env('TELEGRAM_ADMIN_CHAT_ID'))
                 ->notify(new OrderBookedNotification($order));
+                try {
+                    Mail::to('info@deadsealevant.com')->send(new OrderMail($order));
+                } catch (Exception $e) {
+                    Log::debug($e->getMessage());
+                }
             } else {
                 $order->update([
                     'order_status_id' => 3,
