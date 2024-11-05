@@ -151,32 +151,56 @@ class OrderCrudController extends CrudController
             }),
         ]);
     }
+
     protected function setupShowOperation()
     {
         $this->setupListOperation();
 
+        // Add the carts column as the fifth column, displayed as a table
         CRUD::addColumn([
             'name' => 'carts',
             'label' => 'Carts',
             'type' => 'custom_html',
             'value' => function ($entry) {
-                $html = '<ul>';
+                $html = '<table style="width: 100%; border-collapse: collapse;">';
+                $html .= '
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Image</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Product</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Price</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+                        <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>';
+
                 foreach ($entry->carts as $cart) {
                     $productTitle = $cart->product ? $cart->product->title : 'N/A';
                     $quantity = $cart->quantity;
-                    $price = $cart->product ? $cart->product->price : 'N/A';
+                    $price = $cart->product ? $cart->product->price : 0;
+                    $total = $quantity * $price;
                     $imageUrl = $cart->product ? $cart->product->image : null;
 
                     // Create clickable image if available, with fallback text if not
                     $imageTag = $imageUrl
-                        ? "<a href='{$imageUrl}' target='_blank'><img src='{$imageUrl}' alt='{$productTitle}' style='width: 50px; height: 50px; object-fit: cover; margin-right: 10px;'></a>"
-                        : "<span>No image available</span>";
+                        ? "<a href='{$imageUrl}' target='_blank'><img src='{$imageUrl}' alt='{$productTitle}' style='width: 50px; height: 50px; object-fit: cover;'></a>"
+                        : "No image available";
 
-                    $html .= "<li>{$imageTag} <strong>Product:</strong> {$productTitle} - <strong>Quantity:</strong> {$quantity} - <strong>Price:</strong> {$price}</li>";
+                    $html .= "
+                    <tr>
+                        <td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>{$imageTag}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$productTitle}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$price}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$quantity}</td>
+                        <td style='border: 1px solid #ddd; padding: 8px;'>{$total}</td>
+                    </tr>";
                 }
-                $html .= '</ul>';
+
+                $html .= '</tbody></table>';
                 return $html;
             }
-        ]);
+        ])->beforeColumn('subtotal'); // Adjust this to place the carts column as needed
     }
+
 }
