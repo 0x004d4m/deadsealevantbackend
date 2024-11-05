@@ -165,8 +165,14 @@ class OrderCrudController extends CrudController
                     $productTitle = $cart->product ? $cart->product->title : 'N/A';
                     $quantity = $cart->quantity;
                     $price = $cart->product ? $cart->product->price : 'N/A';
+                    $imageUrl = $cart->product ? $cart->product->image : null;
 
-                    $html .= "<li><strong>Product:</strong> {$productTitle} - <strong>Quantity:</strong> {$quantity} - <strong>Price:</strong> {$price}</li>";
+                    // Display image if available, with a fallback message if not
+                    $imageTag = $imageUrl
+                        ? "<img src='{$imageUrl}' alt='{$productTitle}' style='width: 50px; height: 50px; object-fit: cover; margin-right: 10px;'>"
+                        : "<span>No image available</span>";
+
+                    $html .= "<li>{$imageTag} <strong>Product:</strong> {$productTitle} - <strong>Quantity:</strong> {$quantity} - <strong>Price:</strong> {$price}</li>";
                 }
                 $html .= '</ul>';
                 return $html;
