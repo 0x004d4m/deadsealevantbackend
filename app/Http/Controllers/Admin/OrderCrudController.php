@@ -154,5 +154,23 @@ class OrderCrudController extends CrudController
     protected function setupShowOperation()
     {
         $this->setupListOperation();
+
+        CRUD::addColumn([
+            'name' => 'carts',
+            'label' => 'Carts',
+            'type' => 'custom_html',
+            'value' => function ($entry) {
+                $html = '<ul>';
+                foreach ($entry->carts as $cart) {
+                    $productTitle = $cart->product ? $cart->product->title : 'N/A';
+                    $quantity = $cart->quantity;
+                    $price = $cart->product ? $cart->product->price : 'N/A';
+
+                    $html .= "<li><strong>Product:</strong> {$productTitle} - <strong>Quantity:</strong> {$quantity} - <strong>Price:</strong> {$price}</li>";
+                }
+                $html .= '</ul>';
+                return $html;
+            }
+        ]);
     }
 }
